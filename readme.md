@@ -1,14 +1,19 @@
 ###USAGE###
-"python chat_stats.py" or "python chat_stats.py [channel]"
+"python chat_stats.py [channel]"
 
 ###GETTING THE DATA###
-* check the logs directory that is created after running chat_stats.py 
-* get the name of the directory you want to read from.  
-* use the command "python log_reader.py (channel) (dir name) (name of log file)"  
+* Check the logs directory that is created after running chat_stats.py 
+* Get the name of the directory you want to read from.  
+* Use the command "python log_reader.py [channel] [dir name] [name of log file]"  
 
 ###DEPENDENCIES###
-nothing yet
+Nothing yet.
 
 ###TODO###
-words per message, AUTO WORD CLOUD, create images (graphs) of the most used emotes, graphs of rate over time
+* Words per message
+* AUTO WORD CLOUD
+* Create images (graphs) of the most used emotes
+* Graphs of rate over time
 
+###"I found a bug!"###
+[Email me](mailto:popcorncolonel@gmail.com) or [Tweet me](http://twitter.com/popcorncolonel)
