@@ -1,0 +1,4 @@
+def get_username():
+    return "testuser1"
+def get_password():
+    return "oauth:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
