@@ -1,4 +1,5 @@
 #TODO: words per message, --> AUTO WORD CLOUD <--, create images (graphs) of the most used emotes
+#TODO: Delete logs? maybe?
 
 #USAGE: "python chat_stats.py" or "python chat_stats.py <channel>"
 
@@ -42,6 +43,8 @@ def getEmotes():
     return emotelist
 
 emotelist = getEmotes()
+emotelist.remove('GG')
+emotelist.remove('Gg')
 
 directory = "logs/" + channel + '_' + datetime.datetime.now().strftime('%B-%d-%Y_%H-00-00') 
 if not os.path.exists(directory):

@@ -1,4 +1,4 @@
-#Logs into a chat and listens to the messages, calling a function each time
+#Logs in to a chat and listens to the messages, calling a function each distinct line of message
 
 #NOTE: interactive mode is off. i.e. you can call listen() then call end_program on the next line and it'll go until an exception is caught.
 
@@ -20,8 +20,7 @@ def listen(channel, nick, PASS, interpret):
            if data[0:4] == "PING":
               sock.send(data.replace("PING", "PONG"))
            #I split the data like this because the sockets sometimes concats the data in a weird way. This ameliorates that problem.
-           data = data.split('\n')
-           for line in data:
+           for line in data.split('\n'):
                if line != '':
                    interpret(line)
     except KeyboardInterrupt, SystemExit:
