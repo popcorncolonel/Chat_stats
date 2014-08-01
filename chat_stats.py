@@ -153,7 +153,7 @@ from thread import start_new_thread
 def logEvent(x):
     try:
         s = raw_input(x)
-    except EOFError, KeyboardInterrupt, SystemExit:
+    except (EOFError, KeyboardInterrupt, SystemExit):
         print "==================================ENDING PROGRAM================================"
         endProgram()
     start_new_thread(logEvent, ('',))
