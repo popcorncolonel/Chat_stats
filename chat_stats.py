@@ -1,25 +1,27 @@
-#TODO: words per message, --> AUTO WORD CLOUD <--, create images (graphs) of the most used emotes
+#TODO: words per message?, --> AUTO WORD CLOUD <--, create images (graphs) of the most used emotes
 #TODO: Delete logs on SystemExit? maybe?
 
 #USAGE: "python chat_stats.py" or "python chat_stats.py <channel>"
 
-#NOTE: Twitch's IRC doesn't send certain special characters to sockets, so those won't be logged (like some of them here: http://www.umingo.de/doku.php?id=misc:chat_smileys)
+#NOTE: Some special characters don't interact well with sockets and python, so those won't be logged (like some of them here: http://www.umingo.de/doku.php?id=misc:chat_smileys)
 #NOTE: This is meant to be done a few times per stream approximately (not like 100 times per stream). So if you start recording the chat, then restart 5 mins later, the old version will be overwritten, but if you start recording the chat then restart the program 2 hours later, it will start recording new logs. The filename represents when the chat recordings were started.
 #NOTE: 'rate' is in messages per minute
 
 create_images = True #create images? Need matplotlib for this. Which you should have anyway because it's awesome.
-verbose = False
 include_emotes = True #include emotes in the words wordcloud?
-debug = False #It won't log any information.
+verbose = True #default=False
+debug = True #It won't log any information.
 
-import sys
+from thread import start_new_thread
 import os
+import sys
 import time
 import string
 import datetime
 import threading
 import urllib2
 import json
+import re
 from twitch_chat_listen import listen
 if create_images:
     from make_plot import make_plot
@@ -84,8 +86,10 @@ if not debug:
     rate = open_file('rate', 'csv') #how fast chat is going
     files = [authors, messages, words, emotes, rate]
 
+prog = re.compile('^.*[a-z0-9_.-]+\.tmi\.twitch\.tv PRIVMSG #')
 def isMessage(data):
-    return len(data.split('tmi.twitch.tv PRIVMSG #')) > 1
+    return prog.match(data) != None
+    #return len(data.split('tmi.twitch.tv PRIVMSG #')) > 1
 
 def formatMessage(message):
     #TODO: remove the "action" stuff for "/me"s
@@ -114,7 +118,6 @@ def log(author, message):
         if word in emotelist:
             emotes.write(word.split('/')[0].split('7')[0] + '\n')
 
-
 #http://stackoverflow.com/questions/5179467
 def setInterval(interval, times=-1):
     # This will be the actual decorator
@@ -142,6 +145,12 @@ def setInterval(interval, times=-1):
 count=0 #minutes since stream start
 if not debug:
     rate.write('TIME_START='+t+'\n')
+
+cur_game = json.load(urllib2.urlopen('https://api.twitch.tv/kraken/channels/'+channel))['game']
+
+def writeEvent(time, msg):
+    rate.write('*'+str(time)+'*,'+msg+'\n')
+
 #RATE
 @setInterval(60)
 def checkTime():
@@ -149,6 +158,12 @@ def checkTime():
         return
     global count
     global num_messages
+    global cur_game
+    game = json.load(urllib2.urlopen('https://api.twitch.tv/kraken/channels/'+channel))['game']
+    if game != cur_game:
+        print "Now playing " + game
+        #writeEvent(count, 'Now playing ' + game)
+        cur_game = game
     rate.write(str(count)+','+str(num_messages)+'\n')
     count += 1
     for f in files:
@@ -156,19 +171,21 @@ def checkTime():
     num_messages = 0
 
 def endProgram():
+    global dt
     if create_images:
         make_plot(channel, dt)
+        img_directory = "images/" + channel + '/' + dt
+        print "Rate chart created under /" + img_directory
     for f in files:
         f.close()
 #TODO: output images and stuff. stats. (aka the main point of this program.)
     sys.exit()
 
-from thread import start_new_thread
 def logEvent(x):
     global count
     try:
         s = raw_input(x)
-        rate.write('*'+str(count)+'*,'+s+'\n')
+        writeEvent(count, s)
         rate.flush()
         print 'Event "' + s + '" logged at ' + datetime.datetime.now().strftime('%I:%M %p') + '.'
         print
@@ -179,12 +196,15 @@ def logEvent(x):
         endProgram()
     start_new_thread(logEvent, (x,))
 
-start_new_thread(logEvent, ('Log an event to mark this timestamp as a notable point in the stream: ',))
+start_new_thread(logEvent, ('Log an event: ',))
 
 def interpret(data):
     if isMessage(data):
         try:
-            author = data.split('@')[1].split('.tmi.twitch.tv')[0]
+            try:
+                author = data.split('@')[1].split('.tmi.twitch.tv',1)[0]
+            except IndexError:
+                author = data.split('.tmi.twitch.tv',1)[0]
             s = channel + ' :'
             message = s.join(data.split(s)[1:])
             message = filter(lambda x: x in string.printable, message)
