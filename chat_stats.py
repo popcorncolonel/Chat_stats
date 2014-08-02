@@ -9,8 +9,8 @@
 
 create_images = True #create images? Need matplotlib for this. Which you should have anyway because it's awesome.
 include_emotes = True #include emotes in the words wordcloud?
-verbose = True #default=False
-debug = True #It won't log any information.
+verbose = False #default=False
+debug = False #It won't log any information.
 
 from thread import start_new_thread
 import os
