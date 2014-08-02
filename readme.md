@@ -7,7 +7,7 @@
 * Use the command "python log_reader.py [channel] [dir name] [name of log file]"  
 
 ###DEPENDENCIES###
-Nothing yet.
+[Matplotlib](http://matplotlib.org/downloads.html) - Graph creation (if you keep create_images as True).  
 
 ###TODO###
 * Words per message
