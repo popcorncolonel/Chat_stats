@@ -16,7 +16,10 @@ def listen(channel, nick, PASS, interpret):
         sock.send("MODE " + nick + " +B\r\n")
         sock.send("JOIN " + join + "\r\n")
         while True:
-           data = sock.recv(512)
+           try:
+               data = sock.recv(512)
+           except socket.error: #if the user's connection blips
+               continue
            if data[0:4] == "PING":
               sock.send(data.replace("PING", "PONG"))
            #I split the data like this because the sockets sometimes concats the data in a weird way. This ameliorates that problem.

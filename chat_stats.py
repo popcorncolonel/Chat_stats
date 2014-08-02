@@ -1,5 +1,5 @@
 #TODO: words per message, --> AUTO WORD CLOUD <--, create images (graphs) of the most used emotes
-#TODO: Delete logs? maybe?
+#TODO: Delete logs on SystemExit? maybe?
 
 #USAGE: "python chat_stats.py" or "python chat_stats.py <channel>"
 
@@ -7,9 +7,10 @@
 #NOTE: This is meant to be done a few times per stream approximately (not like 100 times per stream). So if you start recording the chat, then restart 5 mins later, the old version will be overwritten, but if you start recording the chat then restart the program 2 hours later, it will start recording new logs. The filename represents when the chat recordings were started.
 #NOTE: 'rate' is in messages per minute
 
-verbose = True
-debug = False
-include_emotes = False
+create_images = True #create images? Need matplotlib for this. Which you should have anyway because it's awesome.
+verbose = False
+include_emotes = True #include emotes in the words wordcloud?
+debug = False #It won't log any information.
 
 import sys
 import os
@@ -20,6 +21,8 @@ import threading
 import urllib2
 import json
 from twitch_chat_listen import listen
+if create_images:
+    from make_plot import make_plot
 try:
     from pass_info import get_password, get_username
 except ImportError:
@@ -46,11 +49,18 @@ def getEmotes():
     print "loaded sub emotes."
     return emotelist
 
+print "Press CTRL+C at any time to end!"
+print
+
 emotelist = getEmotes()
 emotelist.remove('GG')
 emotelist.remove('Gg')
 
-directory = "logs/" + channel + '_' + datetime.datetime.now().strftime('%B-%d-%Y_%I%p') 
+dt = datetime.datetime.now()
+d = dt.strftime('%b-%d-%Y')
+t = dt.strftime('%H_%M')
+dt = dt.strftime('%b-%d-%Y_%I%p')
+directory = "logs/" + channel + '/' + dt
 if not os.path.exists(directory) and not debug:
     os.makedirs(directory)
 print 
@@ -58,7 +68,6 @@ if debug:
     print "Debug mode - not writing to any directories"
 else:
     print "Writing to " + directory
-print
 
 def open_file(kind, extension='log'):
     filename = ""
@@ -105,9 +114,6 @@ def log(author, message):
         if word in emotelist:
             emotes.write(word.split('/')[0].split('7')[0] + '\n')
 
-    for f in files:
-        f.flush()
-
 
 #http://stackoverflow.com/questions/5179467
 def setInterval(interval, times=-1):
@@ -125,7 +131,6 @@ def setInterval(interval, times=-1):
                     stop.wait(interval)
                     function(*args, **kwargs)
                     i += 1
-
             t = threading.Timer(0, inner_wrap)
             t.daemon = True
             t.start()
@@ -134,31 +139,47 @@ def setInterval(interval, times=-1):
     return outer_wrap
 
 
+count=0 #minutes since stream start
+if not debug:
+    rate.write('TIME_START='+t+'\n')
 #RATE
 @setInterval(60)
 def checkTime():
+    if debug:
+        return
+    global count
     global num_messages
-    rate.write(str(time.strftime("%H:%M"))+','+str(num_messages)+'\n')
+    rate.write(str(count)+','+str(num_messages)+'\n')
+    count += 1
+    for f in files:
+        f.flush()
     num_messages = 0
 
 def endProgram():
-    print "closing the program!"
+    if create_images:
+        make_plot(channel, dt)
     for f in files:
         f.close()
-#TODO: output images and stuff. status. (aka the main point of this program.)
-#http://stackoverflow.com/questions/1574088/plotting-time-in-python-with-matplotlib
+#TODO: output images and stuff. stats. (aka the main point of this program.)
     sys.exit()
 
 from thread import start_new_thread
 def logEvent(x):
+    global count
     try:
         s = raw_input(x)
+        rate.write('*'+str(count)+'*,'+s+'\n')
+        rate.flush()
+        print 'Event "' + s + '" logged at ' + datetime.datetime.now().strftime('%I:%M %p') + '.'
+        print
     except (EOFError, KeyboardInterrupt, SystemExit):
+        print
+        print
         print "==================================ENDING PROGRAM================================"
         endProgram()
-    start_new_thread(logEvent, ('',))
+    start_new_thread(logEvent, (x,))
 
-start_new_thread(logEvent, ('',))
+start_new_thread(logEvent, ('Log an event to mark this timestamp as a notable point in the stream: ',))
 
 def interpret(data):
     if isMessage(data):
@@ -171,9 +192,11 @@ def interpret(data):
             if verbose:
                 print (author + ' - ' + message).strip()
         except IndexError:
+            print
             print 'MALFORMED DATA - ' + data
             print 'MALFORMED DATA - ' + data
             print 'MALFORMED DATA - ' + data
+            print
             return
 
 nick = get_username()
