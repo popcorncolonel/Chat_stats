@@ -149,11 +149,13 @@ def setInterval(interval, times=-1):
     return outer_wrap
 
 
+#init
 if not debug:
     rate.write('TIME_START='+t+'\n')
 
 cur_game = json.load(urllib2.urlopen('https://api.twitch.tv/kraken/channels/'+channel))['game']
 
+#Writes a notable event to be marked by red vertical line and text
 def writeEvent(time, msg):
     try:
         rate.write('*'+str(time)+'*,'+msg+'\n')
@@ -169,16 +171,20 @@ def checkTime():
     global num_messages
     global cur_game
     game = cur_game
-    try:
-        game = json.load(urllib2.urlopen('https://api.twitch.tv/kraken/channels/'+channel))['game']
-    except urllib2.URLError:
-        pass
+    while True:
+        try:
+            game = json.load(urllib2.urlopen('https://api.twitch.tv/kraken/channels/'+channel))['game']
+            viewers = json.load(urllib2.urlopen('https://api.twitch.tv/kraken/streams/'+channel))['stream']
+            break
+        except urllib2.URLError:
+            pass
+    viewers = 0 if viewers == 'null' else int(viewers)
     if game != cur_game:
         print "Now playing " + game
         #writeEvent(count, 'Now playing ' + game)
         cur_game = game
     try:
-        rate.write(str(count)+','+str(num_messages)+'\n')
+        rate.write(str(count)+','+str(num_messages)+str(viewers)+'\n')
     except ValueError: #happens if the program closes in the middle of writing to the files
         pass
     count += 1
