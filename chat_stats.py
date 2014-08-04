@@ -36,7 +36,6 @@ if len(sys.argv) == 1:
     channel = raw_input("Chat to join: ")
 else:
     channel = sys.argv[1]
-    print sys.argv
 try:
     count = int(sys.argv[2])
 except IndexError, ValueError:
@@ -153,14 +152,25 @@ def setInterval(interval, times=-1):
 if not debug:
     rate.write('TIME_START='+t+'\n')
 
-cur_game = json.load(urllib2.urlopen('https://api.twitch.tv/kraken/channels/'+channel))['game']
-
 #Writes a notable event to be marked by red vertical line and text
 def writeEvent(time, msg):
     try:
         rate.write('*'+str(time)+'*,'+msg+'\n')
     except ValueError: #happens if the program closes in the middle of writing to the files
         pass
+
+def get(URL):
+    val = None
+    while True:
+        try:
+            val = urllib2.urlopen(URL)
+            break
+        except urllib2.URLError:
+            print "Connection timed out. Retrying."
+            pass
+    return val
+            
+cur_game = json.load(get('https://api.twitch.tv/kraken/channels/'+channel))['game']
 
 #RATE
 @setInterval(60)
@@ -171,20 +181,18 @@ def checkTime():
     global num_messages
     global cur_game
     game = cur_game
-    while True:
-        try:
-            game = json.load(urllib2.urlopen('https://api.twitch.tv/kraken/channels/'+channel))['game']
-            viewers = json.load(urllib2.urlopen('https://api.twitch.tv/kraken/streams/'+channel))['stream']
-            break
-        except urllib2.URLError:
-            pass
-    viewers = 0 if viewers == 'null' else int(viewers)
+    stream = json.load(get('https://api.twitch.tv/kraken/streams/'+channel))['stream']
+    if stream == 'null':
+        viewers = int(json.load(get('http://tmi.twitch.tv/group/user/'+channel))['chatter_count'])
+        game = json.load(get('https://api.twitch.tv/kraken/channels/'+channel))['game']
+    else:
+        viewers = int(stream['viewers'])
     if game != cur_game:
         print "Now playing " + game
         #writeEvent(count, 'Now playing ' + game)
         cur_game = game
     try:
-        rate.write(str(count)+','+str(num_messages)+str(viewers)+'\n')
+        rate.write(str(count)+','+str(num_messages)+','+str(viewers)+'\n')
     except ValueError: #happens if the program closes in the middle of writing to the files
         pass
     count += 1
