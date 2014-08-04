@@ -18,7 +18,10 @@ def listen(channel, nick, PASS, interpret):
         while True:
            try:
                data = sock.recv(512)
+           #except ValueError:
+           #    pass
            except socket.error: #if the user's connection blips
+               print "socket error, continuing to listen"
                continue
            if data[0:4] == "PING":
               sock.send(data.replace("PING", "PONG"))

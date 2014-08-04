@@ -1,5 +1,6 @@
 #TODO: words per message?, --> AUTO WORD CLOUD <--, create images (graphs) of the most used emotes
 #TODO: Delete logs on SystemExit? maybe?
+#TODO: listen() might crash silently on internet interruption. need to do more testing.
 
 #USAGE: "python chat_stats.py" or "python chat_stats.py <channel>"
 
@@ -9,10 +10,10 @@
 
 create_images = True #create images? Need matplotlib for this. Which you should have anyway because it's awesome.
 include_emotes = True #include emotes in the words wordcloud?
-verbose = False #default=False
+verbose = True #default=False
 debug = False #It won't log any information.
 
-from thread import start_new_thread
+from thread import start_new_thread, exit
 import os
 import sys
 import time
@@ -35,6 +36,11 @@ if len(sys.argv) == 1:
     channel = raw_input("Chat to join: ")
 else:
     channel = sys.argv[1]
+    print sys.argv
+try:
+    count = int(sys.argv[2])
+except IndexError, ValueError:
+    count = 0
 if 'debug' in sys.argv[2:]:
     debug = True
 
@@ -44,14 +50,12 @@ def getEmotes():
     print "loading emotes..."
     normal = json.load(urllib2.urlopen('http://twitchemotes.com/global.json'))
     emotelist.extend(normal.keys())
-    print "loaded global emotes. loading sub emotes..."
+    print "loading sub emotes..."
     subs = json.load(urllib2.urlopen('http://twitchemotes.com/subscriber.json'))
     for channel in subs.keys():
         emotelist.extend(subs[channel]['emotes'].keys())
-    print "loaded sub emotes."
     return emotelist
 
-print "Press CTRL+C at any time to end!"
 print
 
 emotelist = getEmotes()
@@ -104,19 +108,22 @@ def log(author, message):
         return
     message = formatMessage(message)
 
-    #AUTHORS
-    authors.write(author + '\n')
-    #MESSAGES
-    messages.write(message + '\n')
-    #WORDS
-    for word in message.split(' '):
-        if word.isalnum() and (include_emotes or word not in emotelist):
-            words.write(word.upper())
-            words.write(' ')
-    #EMOTES
-    for word in message.split(' '):
-        if word in emotelist:
-            emotes.write(word.split('/')[0].split('7')[0] + '\n')
+    try:
+        #AUTHORS
+        authors.write(author + '\n')
+        #MESSAGES
+        messages.write(message + '\n')
+        #WORDS
+        for word in message.split(' '):
+            if word.isalnum() and (include_emotes or word not in emotelist):
+                words.write(word.upper())
+                words.write(' ')
+        #EMOTES
+        for word in message.split(' '):
+            if word in emotelist:
+                emotes.write(word.split('/')[0].split('7')[0] + '\n')
+    except ValueError: #happens if the program closes in the middle of writing to the files
+        pass
 
 #http://stackoverflow.com/questions/5179467
 def setInterval(interval, times=-1):
@@ -142,14 +149,16 @@ def setInterval(interval, times=-1):
     return outer_wrap
 
 
-count=0 #minutes since stream start
 if not debug:
     rate.write('TIME_START='+t+'\n')
 
 cur_game = json.load(urllib2.urlopen('https://api.twitch.tv/kraken/channels/'+channel))['game']
 
 def writeEvent(time, msg):
-    rate.write('*'+str(time)+'*,'+msg+'\n')
+    try:
+        rate.write('*'+str(time)+'*,'+msg+'\n')
+    except ValueError: #happens if the program closes in the middle of writing to the files
+        pass
 
 #RATE
 @setInterval(60)
@@ -159,44 +168,65 @@ def checkTime():
     global count
     global num_messages
     global cur_game
-    game = json.load(urllib2.urlopen('https://api.twitch.tv/kraken/channels/'+channel))['game']
+    game = cur_game
+    try:
+        game = json.load(urllib2.urlopen('https://api.twitch.tv/kraken/channels/'+channel))['game']
+    except urllib2.URLError:
+        pass
     if game != cur_game:
         print "Now playing " + game
         #writeEvent(count, 'Now playing ' + game)
         cur_game = game
-    rate.write(str(count)+','+str(num_messages)+'\n')
+    try:
+        rate.write(str(count)+','+str(num_messages)+'\n')
+    except ValueError: #happens if the program closes in the middle of writing to the files
+        pass
     count += 1
     for f in files:
         f.flush()
     num_messages = 0
 
+done = False
+
 def endProgram():
+    global done
     global dt
+    done = True
+    for f in files:
+        f.close()
     if create_images:
         make_plot(channel, dt)
         img_directory = "images/" + channel + '/' + dt
         print "Rate chart created under /" + img_directory
-    for f in files:
-        f.close()
+    else:
+        print create_images
+    exit()
 #TODO: output images and stuff. stats. (aka the main point of this program.)
-    sys.exit()
+    #sys.exit()
 
 def logEvent(x):
     global count
+    global done
     try:
         s = raw_input(x)
+        if s == '!exit' or s == '!quit' or s == '!q':
+            print "==================================ENDING PROGRAM================================"
+            endProgram()
         writeEvent(count, s)
-        rate.flush()
+        try:
+            rate.flush()
+        except ValueError: #happens if the program closes in the middle of writing to the files
+            pass
         print 'Event "' + s + '" logged at ' + datetime.datetime.now().strftime('%I:%M %p') + '.'
         print
     except (EOFError, KeyboardInterrupt, SystemExit):
         print
         print
-        print "==================================ENDING PROGRAM================================"
+        print "==================================ENDING PROGRAM!+=============================="
         endProgram()
-    start_new_thread(logEvent, (x,))
-
-start_new_thread(logEvent, ('Log an event: ',))
+        pass
+    if not done:
+        start_new_thread(logEvent, (x,))
 
 def interpret(data):
     if isMessage(data):
@@ -224,6 +254,8 @@ PASS = get_password()
 
 print
 print "===============================STARTING CHAT INPUT=============================="
+print "Type '!exit', '!quit', or '!q' to stop recording."
+start_new_thread(logEvent, ('Log an event: ',))
 checkTime()
 listen(channel, nick, PASS, interpret)
 print "==================================ENDING_PROGRAM================================"

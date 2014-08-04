@@ -30,7 +30,7 @@ else:
 #dictionary with all the counts of the words
 d = {}
 
-directory = "logs/" + channel + '_' + date
+directory = "logs/" + channel + '/' + date
 file_path = os.path.relpath(directory + '/' + kind + '.log')
 
 log = open(file_path, 'r')
