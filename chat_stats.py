@@ -9,7 +9,7 @@
 #NOTE: 'rate' is in messages per minute
 
 create_images = True #create images? Need matplotlib for this. Which you should have anyway because it's awesome.
-include_emotes = True #include emotes in the words wordcloud?
+include_emotes = False #include emotes in the words wordcloud?
 verbose = True #default=False
 debug = False #It won't log any information.
 
