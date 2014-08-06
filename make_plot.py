@@ -163,15 +163,19 @@ def make_plot(channel, time, drawLabels=True):
     if show_viewers:
         ax2color = 'green'
         ax2 = ax.twinx()
-        ax2.plot(x,y2,linewidth=2,color=ax2color)
+        ax2.plot(x,y2,linewidth=4,color=ax2color)
         ax2.fill_between(x,0,y2,color=ax2color, alpha=0.1)
         ax2.set_frame_on(True)
         ax2.patch.set_visible(False)
         ax2.yaxis.set_ticks_position('right')
         ax2.yaxis.set_label_position('right')
         ax2.set_ylabel('Viewercount\n', color=ax2color, rotation=270)
-        ax.set_yticks( np.arange(0, 1.5*max(y),   get_yinterval(max(y))))
-        ax2.set_yticks(np.arange(0, 1.16*max(y2), get_yinterval(max(y2))))
+        m =  1.16*max(y)
+        m2 = 1.16*max(y2)
+        ax.set_yticks( np.arange(0, m,   get_yinterval(max(y))))
+        ax2.set_yticks(np.arange(0, m2, get_yinterval(max(y2))))
+        ax.set_ylim(0, m)
+        ax2.set_ylim(0, m2)
         for tl in ax2.get_yticklabels():
             tl.set_color(ax2color)
 
@@ -181,19 +185,24 @@ def make_plot(channel, time, drawLabels=True):
 
     import matplotlib.patheffects as PathEffects
 
-    ticklist = ax.get_yticks()
+    ticklist = ax2.get_yticks()
     height_diff = ticklist[1] - ticklist[0]
     height_offset = 0
     for event in events:
         if drawLabels:
             plt.axvline(x=event[0]+padding_mins+carry*interval, color='red', linewidth=2, label=event[1])
             s = event[1].replace('\\n', '\n')
-            plt.text(event[0]+padding_mins+carry*interval, ax.yaxis.get_view_interval()[1]-height_offset, 
-                    s, color='red', verticalalignment='top', 
-                    horizontalalignment='center', fontsize=25, 
+            ha = 'center'
+            down = ax2.yaxis.get_view_interval()[1]-height_offset
+            #if event == events[-1]:
+            #    ha = 'right'
+            #    down = 2950
+            plt.text(event[0]+padding_mins+carry*interval, 
+                    down, s, color='red', verticalalignment='top', 
+                    horizontalalignment=ha, fontsize=25, 
                     path_effects=[PathEffects.withSimplePatchShadow(linewidth=2)])
-                    #path_effects=[PathEffects.withStroke(linewidth=1,foreground="white")])
-            height_offset = (height_offset + height_diff/2.0) % (height_diff+1)
+                    #path_effects=[PathEffects.withStroke(linewidth=1,foreground="black")])
+            height_offset = height_diff - height_offset
 
     #plt.show()
 
