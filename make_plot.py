@@ -47,7 +47,7 @@ def get_xinterval(dur):
         interval = 720
     return interval
 
-def get_y2interval(max_viewercount):
+def get_yinterval(max_viewercount):
     interval = 1
     if max_viewercount > 10:
         interval = 2
@@ -154,7 +154,8 @@ def make_plot(channel, time, drawLabels=True):
     s = time.split('-')
     plt.title("%s's stream on %s %d, %d\n" %(channel, s[0], int(s[1]), int(s[2].split('_')[0])))
 
-    plt.ylabel('Messages per minute', color='blue')
+    plt.xlabel('\nTimes in EDT')
+    plt.ylabel('Messages per minute\n', color='blue')
     for tl in ax.get_yticklabels():
         tl.set_color('blue')
     plt.plot(x,y,linewidth=2,color='#4422AA')
@@ -168,8 +169,9 @@ def make_plot(channel, time, drawLabels=True):
         ax2.patch.set_visible(False)
         ax2.yaxis.set_ticks_position('right')
         ax2.yaxis.set_label_position('right')
-        ax2.set_ylabel('Viewercount', color=ax2color, rotation=90)
-        ax2.set_yticks(np.arange(0, max(y2)+float(1)/6*max(y2), get_y2interval(max(y2))))
+        ax2.set_ylabel('Viewercount\n', color=ax2color, rotation=270)
+        ax.set_yticks( np.arange(0, 1.5*max(y),   get_yinterval(max(y))))
+        ax2.set_yticks(np.arange(0, 1.16*max(y2), get_yinterval(max(y2))))
         for tl in ax2.get_yticklabels():
             tl.set_color(ax2color)
 

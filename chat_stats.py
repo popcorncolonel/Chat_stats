@@ -122,6 +122,7 @@ def log(author, message):
             if word in emotelist:
                 emotes.write(word.split('/')[0].split('7')[0] + '\n')
     except ValueError: #happens if the program closes in the middle of writing to the files
+        print "Closing program..."
         pass
 
 #http://stackoverflow.com/questions/5179467
@@ -182,7 +183,7 @@ def checkTime():
     global cur_game
     game = cur_game
     stream = json.load(get('https://api.twitch.tv/kraken/streams/'+channel))['stream']
-    if stream == 'null':
+    if stream == None:
         viewers = int(json.load(get('http://tmi.twitch.tv/group/user/'+channel))['chatter_count'])
         game = json.load(get('https://api.twitch.tv/kraken/channels/'+channel))['game']
     else:
