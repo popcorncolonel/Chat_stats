@@ -192,14 +192,11 @@ def make_plot(channel, time, drawLabels=True):
         if drawLabels:
             plt.axvline(x=event[0]+padding_mins+carry*interval, color='red', linewidth=2, label=event[1])
             s = event[1].replace('\\n', '\n')
-            ha = 'center'
+            ha = 'left'
             down = ax2.yaxis.get_view_interval()[1]-height_offset
-            #if event == events[-1]:
-            #    ha = 'right'
-            #    down = 2950
             plt.text(event[0]+padding_mins+carry*interval, 
                     down, s, color='red', verticalalignment='top', 
-                    horizontalalignment=ha, fontsize=25, 
+                    horizontalalignment=ha, fontsize=25, rotation=0, #rotation=270,
                     path_effects=[PathEffects.withSimplePatchShadow(linewidth=2)])
                     #path_effects=[PathEffects.withStroke(linewidth=1,foreground="black")])
             height_offset = height_diff - height_offset
