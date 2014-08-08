@@ -8,10 +8,13 @@
 
 ###DEPENDENCIES###
 [Matplotlib](http://matplotlib.org/downloads.html) - Graph creation (if you keep create_images as True).  
+[word_cloud](https://github.com/amueller/word_cloud) - Word cloud creation.  
+* [Python Imaging Library](http://www.pythonware.com/products/pil/) - Word cloud creation.  
+* [Cython](http://cython.org/#download) - Word cloud creation.  
 
 ###TODO###
-* Words per message
-* AUTO WORD CLOUD
+* examples folder. listed inline in this file.
+* Words per message?  
 * Create images (graphs) of the most used emotes
 
 ###"I found a bug!"###

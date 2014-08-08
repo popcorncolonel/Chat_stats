@@ -8,8 +8,10 @@
 #NOTE: This is meant to be done a few times per stream approximately (not like 100 times per stream). So if you start recording the chat, then restart 5 mins later, the old version will be overwritten, but if you start recording the chat then restart the program 2 hours later, it will start recording new logs. The filename represents when the chat recordings were started.
 #NOTE: 'rate' is in messages per minute
 
-create_images = True #create images? Need matplotlib for this. Which you should have anyway because it's awesome.
 include_emotes = False #include emotes in the words wordcloud?
+create_graph = True #create graph of the rates over time? Need matplotlib for this. 
+                        #Which you should have anyway because it's awesome.
+create_wordcloud = True #create wordclouds of the chat? Need word_cloud for this.
 verbose = True #default=False
 debug = False #It won't log any information.
 
@@ -24,8 +26,18 @@ import urllib2
 import json
 import re
 from twitch_chat_listen import listen
-if create_images:
+
+if '-nocloud' in sys.argv[2:]:
+    create_wordcloud = False
+if '-nograph' in sys.argv[2:]:
+    create_graph = True
+if 'debug' in sys.argv[2:]:
+    debug = True
+
+if create_graph:
     from make_plot import make_plot
+if create_wordcloud:
+    from make_cloud import make_cloud
 try:
     from pass_info import get_password, get_username
 except ImportError:
@@ -40,8 +52,6 @@ try:
     count = int(sys.argv[2])
 except IndexError, ValueError:
     count = 0
-if 'debug' in sys.argv[2:]:
-    debug = True
 
 #thanks to http://twitchemotes.com/ :-)
 def getEmotes():
@@ -209,12 +219,15 @@ def endProgram():
     done = True
     for f in files:
         f.close()
-    if create_images:
+    img_directory = "images/" + channel + '/' + dt
+    if create_wordcloud:
+        make_cloud(channel, dt)
+        print "Rate chart created under /" + img_directory + "!"
+    if create_graph:
         make_plot(channel, dt)
-        img_directory = "images/" + channel + '/' + dt
-        print "Rate chart created under /" + img_directory
+        print "Rate chart created under /" + img_directory + "!"
     else:
-        print create_images
+        print create_graph
     exit()
 #TODO: output images and stuff. stats. (aka the main point of this program.)
     #sys.exit()
@@ -234,7 +247,7 @@ def logEvent(x):
             pass
         print 'Event "' + s + '" logged at ' + datetime.datetime.now().strftime('%I:%M %p') + '.'
         print
-    except (EOFError, KeyboardInterrupt, SystemExit):
+    except (EOFError, KeyboardInterrupt):
         print
         print
         print "==================================ENDING PROGRAM!+=============================="

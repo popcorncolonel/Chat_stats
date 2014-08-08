@@ -85,8 +85,8 @@ def make_plot(channel, time, drawLabels=True):
     filename = 'rate.csv'
     file_path = os.path.relpath(directory + '/' + filename)
 
-    rate = open(file_path, 'r')
-    rates = map(lambda x:x.strip(), list(rate))
+    with open(file_path, 'r') as rate:
+        rates = map(lambda x:x.strip(), list(rate))
 
     start_hour = int(rates[0].split('=')[1].split('_')[0])
     start_min  = int(rates[0].split('=')[1].split('_')[1])
