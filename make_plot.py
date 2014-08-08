@@ -9,6 +9,7 @@ try:
     import matplotlib
     import matplotlib.pyplot as plt
     import numpy as np
+    import matplotlib.patheffects as PathEffects
     from matplotlib.ticker import FuncFormatter
 except ImportError:
     print "Looks like you're missing some of the matplotlib dependencies - Check the Github page at https://github.com/popcorncolonel/chat_stats to see what you need to install."
@@ -139,6 +140,8 @@ def make_plot(channel, time, drawLabels=True):
                               x%60,
                               'PM' if (start_hour + x/60)%24 >= 12 else 'AM')
 
+    print "Drawing rate over time graph..."
+
     #START GRAPHING
     #plt.figure(num=None, figsize=(36, 16), dpi=80)
     plt.figure(num=None, figsize=(27, 12), dpi=80)
@@ -183,8 +186,6 @@ def make_plot(channel, time, drawLabels=True):
     font = {'size' : 20}
     matplotlib.rc('font', **font)
 
-    import matplotlib.patheffects as PathEffects
-
     ticklist = ax2.get_yticks()
     height_diff = ticklist[1] - ticklist[0]
     height_offset = 0
@@ -207,6 +208,7 @@ def make_plot(channel, time, drawLabels=True):
     if not os.path.exists(directory):
         os.makedirs(directory)
     plt.savefig(directory + '/rate.png', bbox_inches='tight')
+    print "Rate graph completed!"
     sys.exit()
 
 chan = None

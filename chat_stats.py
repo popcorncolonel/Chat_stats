@@ -74,7 +74,7 @@ emotelist.remove('Gg')
 dt = datetime.datetime.now()
 d = dt.strftime('%b-%d-%Y')
 t = dt.strftime('%H_%M')
-dt = dt.strftime('%b-%m-%d-%I%p') #2014-08-23-02PM
+dt = dt.strftime('%Y-%m-%d-%I%p') #2014-08-23-02PM
 directory = "logs/" + channel + '/' + dt
 if not os.path.exists(directory) and not debug:
     os.makedirs(directory)
@@ -222,7 +222,7 @@ def endProgram():
     img_directory = "images/" + channel + '/' + dt
     if create_wordcloud:
         make_cloud(channel, dt)
-        print "Rate chart created under /" + img_directory + "!"
+        print "Word clouds created under /" + img_directory + "!"
     if create_graph:
         make_plot(channel, dt)
         print "Rate chart created under /" + img_directory + "!"

@@ -28,7 +28,7 @@ def make_cloud(channel, time, myType=None, drawLabels=True):
 
         w_words = 1600
         h_words = 900
-        print "Generating word cloud... Hold on!"
+        print "Generating word cloud... Hold on! (This takes a while if there are a lot of words)"
         w = wordcloud.process_text(words, max_features=1000)
         elements = wordcloud.fit_words(w, width=w_words, height=h_words)
         wordcloud.draw(elements, os.path.relpath(directory + '/wordcloud.png'), width=w_words, height=h_words, scale=1)
