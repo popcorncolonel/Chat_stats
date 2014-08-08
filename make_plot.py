@@ -154,11 +154,12 @@ def make_plot(channel, time, drawLabels=True):
     ax.grid(True)
 
     plt.xticks(np.arange(min(x), max(x)+1, interval), rotation=45)
-    s = time.split('-')
-    plt.title("%s's stream on %s %d, %d\n" %(channel, s[0], int(s[1]), int(s[2].split('_')[0])))
+    times = time.split('-') #2014-08-23-04AM
+    months = ['','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    plt.title("%s - %s %d, %d\n" %(channel, months[int(times[1])], int(times[2]), int(times[0])))
 
     plt.xlabel('\nTimes in EDT')
-    plt.ylabel('Messages per minute\n', color='blue')
+    plt.ylabel('\nMessages per minute\n', color='blue')
     for tl in ax.get_yticklabels():
         tl.set_color('blue')
     plt.plot(x,y,linewidth=2,color='#4422AA')
@@ -172,7 +173,7 @@ def make_plot(channel, time, drawLabels=True):
         ax2.patch.set_visible(False)
         ax2.yaxis.set_ticks_position('right')
         ax2.yaxis.set_label_position('right')
-        ax2.set_ylabel('Viewercount\n', color=ax2color, rotation=270)
+        ax2.set_ylabel('\nViewercount\n', color=ax2color, rotation=270)
         m =  1.16*max(y)
         m2 = 1.16*max(y2)
         ax.set_yticks( np.arange(0, m,   get_yinterval(max(y))))
@@ -183,17 +184,17 @@ def make_plot(channel, time, drawLabels=True):
             tl.set_color(ax2color)
 
     ax.fill_between(x,0,y,color='#5577DD')
-    font = {'size' : 20}
+    font = {'size' : 25}
     matplotlib.rc('font', **font)
 
     ticklist = ax2.get_yticks()
     height_diff = ticklist[1] - ticklist[0]
     height_offset = 0
+    ha = 'left'
     for event in events:
         if drawLabels:
             plt.axvline(x=event[0]+padding_mins+carry*interval, color='red', linewidth=2, label=event[1])
             s = event[1].replace('\\n', '\n')
-            ha = 'left'
             down = ax2.yaxis.get_view_interval()[1]-height_offset
             plt.text(event[0]+padding_mins+carry*interval, 
                     down, s, color='red', verticalalignment='top', 
@@ -201,8 +202,13 @@ def make_plot(channel, time, drawLabels=True):
                     path_effects=[PathEffects.withSimplePatchShadow(linewidth=2)])
                     #path_effects=[PathEffects.withStroke(linewidth=1,foreground="black")])
             height_offset = height_diff - height_offset
+    #S E L L O U T
+    plt.text(-0.05, -0.170, 'http://github.com/popcorncolonel/chat_stats', color='grey', verticalalignment='top', 
+            horizontalalignment='left', fontsize=25, rotation=0, transform=ax.transAxes)
+    plt.text(1.05, -0.170, 'http://www.twitch.tv/'+channel, color='grey', verticalalignment='top', 
+            horizontalalignment='right', fontsize=25, rotation=0, transform=ax.transAxes)
 
-    #plt.show()
+    #plt.show() #for running locally rather than saving the figure
 
     directory = "images/" + channel + '/' + time
     if not os.path.exists(directory):

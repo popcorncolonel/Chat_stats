@@ -1,8 +1,11 @@
+#TODO? Make emote cloud the actual pictures of the emotes? How bad of an idea is that. I don't know.
+
 import os
 import sys
 import datetime
 import random
 import urllib2
+from global_consts import w_emotes, h_emotes, w_words, h_words
 try:
     import wordcloud
 except ImportError:
@@ -20,22 +23,18 @@ def make_cloud(channel, time, myType=None, drawLabels=True):
 
         file_path = os.path.relpath(directory + '/emotes.log')
         with open(file_path, 'r') as f:
-            emotes = f.read()
+            emotes = " ".join(filter(lambda x:len(x)>3, f.read().split('\n')))
 
         directory = "images/" + channel + '/' + time
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        w_words = 1600
-        h_words = 900
         print "Generating word cloud... Hold on! (This takes a while if there are a lot of words)"
         w = wordcloud.process_text(words, max_features=1000)
-        elements = wordcloud.fit_words(w, width=w_words, height=h_words)
-        wordcloud.draw(elements, os.path.relpath(directory + '/wordcloud.png'), width=w_words, height=h_words, scale=1)
+        elements = wordcloud.fit_words(w, width=w_words/2, height=h_words/2)
+        wordcloud.draw(elements, os.path.relpath(directory + '/wordcloud.png'), width=w_words/2, height=h_words/2, scale=2)
         print "Word cloud created!"
 
-        w_emotes = 1600
-        h_emotes = 900
         print "Generating emote cloud..."
         w = wordcloud.process_text(emotes, max_features=1000)
         elements = wordcloud.fit_words(w, width=w_emotes, height=h_emotes)

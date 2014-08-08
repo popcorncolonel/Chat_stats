@@ -8,12 +8,6 @@
 #NOTE: This is meant to be done a few times per stream approximately (not like 100 times per stream). So if you start recording the chat, then restart 5 mins later, the old version will be overwritten, but if you start recording the chat then restart the program 2 hours later, it will start recording new logs. The filename represents when the chat recordings were started.
 #NOTE: 'rate' is in messages per minute
 
-include_emotes = False #include emotes in the words wordcloud?
-create_graph = True #create graph of the rates over time? Need matplotlib for this. 
-                        #Which you should have anyway because it's awesome.
-create_wordcloud = True #create wordclouds of the chat? Need word_cloud for this.
-verbose = True #default=False
-debug = False #It won't log any information.
 
 from thread import start_new_thread, exit
 import os
@@ -26,6 +20,8 @@ import urllib2
 import json
 import re
 from twitch_chat_listen import listen
+
+from global_consts import include_emotes, create_graph, create_wordcloud, verbose, debug
 
 if '--nocloud' in sys.argv[2:]:
     create_wordcloud = False
