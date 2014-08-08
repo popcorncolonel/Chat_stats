@@ -27,11 +27,11 @@ import json
 import re
 from twitch_chat_listen import listen
 
-if '-nocloud' in sys.argv[2:]:
+if '--nocloud' in sys.argv[2:]:
     create_wordcloud = False
-if '-nograph' in sys.argv[2:]:
+if '--nograph' in sys.argv[2:]:
     create_graph = True
-if 'debug' in sys.argv[2:]:
+if '--debug' in sys.argv[2:]:
     debug = True
 
 if create_graph:
@@ -74,7 +74,7 @@ emotelist.remove('Gg')
 dt = datetime.datetime.now()
 d = dt.strftime('%b-%d-%Y')
 t = dt.strftime('%H_%M')
-dt = dt.strftime('%b-%d-%Y_%I%p')
+dt = dt.strftime('%b-%m-%d-%I%p') #2014-08-23-02PM
 directory = "logs/" + channel + '/' + dt
 if not os.path.exists(directory) and not debug:
     os.makedirs(directory)

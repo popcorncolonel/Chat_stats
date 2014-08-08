@@ -11,7 +11,7 @@ try:
     import numpy as np
     from matplotlib.ticker import FuncFormatter
 except ImportError:
-    print "Looks like you're missing some dependencies - Check the Github page at https://github.com/popcorncolonel/chat_stats to see what you need to install."
+    print "Looks like you're missing some of the matplotlib dependencies - Check the Github page at https://github.com/popcorncolonel/chat_stats to see what you need to install."
     sys.exit()
 
 #leaves max(0, padding_mins) zeroes at the end to make it look more natural.
