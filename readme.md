@@ -1,6 +1,11 @@
+###What is this?###
+This is a visualizer for Twitch chat. First, you set it to record the stream. When the stream is over (or you're done recording), the program automatically generates a graph of stream activity (chat rate and viewership) over time, then generates a few word clouds that help to visualize the chat experience. Examples of both can be found in the "examples" directory of this repository.
+
 ###USAGE###
-* "python chat_stats.py [channel]"  
-To analyze data:
+* "python chat_stats.py [channel]" <-- to start recording  
+
+
+To analyze data (optional - the images are still generated if you don't run this command):  
 * "python log_reader.py [channel] [date] [type]" <-- where [type] is an element of {'words', 'emotes', 'authors', 'messages'}
 
 ###GETTING THE DATA###
