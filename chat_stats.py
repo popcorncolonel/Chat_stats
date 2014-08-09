@@ -200,11 +200,11 @@ def checkTime():
         cur_game = game
     try:
         rate.write(str(count)+','+str(num_messages)+','+str(viewers)+'\n')
+        for f in files:
+            f.flush()
     except ValueError: #happens if the program closes in the middle of writing to the files
         pass
-    count += 1
-    for f in files:
-        f.flush()
+        count += 1
     num_messages = 0
 
 done = False

@@ -29,10 +29,11 @@ def make_cloud(channel, time, myType=None, drawLabels=True):
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        print "Generating word cloud... Hold on! (This takes a while if there are a lot of words)"
+        print "Generating word cloud... Hold on! (This takes a while if there are a lot of messages)"
+        scale = 2
         w = wordcloud.process_text(words, max_features=1000)
-        elements = wordcloud.fit_words(w, width=w_words/2, height=h_words/2)
-        wordcloud.draw(elements, os.path.relpath(directory + '/wordcloud.png'), width=w_words/2, height=h_words/2, scale=2)
+        elements = wordcloud.fit_words(w, width=w_words/scale, height=h_words/scale)
+        wordcloud.draw(elements, os.path.relpath(directory + '/wordcloud.png'), width=w_words/scale, height=h_words/scale, scale=scale)
         print "Word cloud created!"
 
         print "Generating emote cloud..."
@@ -44,26 +45,34 @@ def make_cloud(channel, time, myType=None, drawLabels=True):
         w_custom = 1600
         h_custom = 900
         file_path = os.path.relpath(directory + '/'+myType+'.log')
+
+        directory = "images/" + channel + '/' + time
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
         with open(file_path, 'r') as f:
             data = f.read()
+        if myType.lower() == 'authors':
+            data = data.upper()
         print "Generating " +myType+ " cloud... Hold on!"
+        scale = 2
         w = wordcloud.process_text(data, max_features=1000)
-        elements = wordcloud.fit_words(w, width=w_custom, height=h_custom)
-        wordcloud.draw(elements, os.path.relpath(directory + '/'+myType+'.png'), width=w_custom, height=h_custom)
+        elements = wordcloud.fit_words(w, width=w_custom/scale, height=h_custom/scale)
+        wordcloud.draw(elements, os.path.relpath(directory + '/'+myType+'cloud.png'), width=w_custom/scale, height=h_custom/scale, scale=scale)
         print myType + " cloud created!"
 
 
 chan = None
 time = None
-try:
-    chan = sys.argv[1]
-    time = sys.argv[2]
-    myType = None
-    if len(sys.argv) > 3:
-        myType = sys.argv[3]
-    #raise IndexError
-    make_cloud(chan, time, myType)
-except IndexError:
-    pass
+if sys.argv[0] == __file__:
+    try:
+        chan = sys.argv[1]
+        time = sys.argv[2]
+        myType = None
+        if len(sys.argv) > 3:
+            myType = sys.argv[3]
+        make_cloud(chan, time, myType)
+    except IndexError:
+        pass
 
 

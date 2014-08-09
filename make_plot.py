@@ -36,7 +36,7 @@ def get_xinterval(dur):
         interval = 15
     if dur > 240:
         interval = 30
-    if dur > 900:
+    if dur > 780:
         interval = 60
     if dur > 1800:
         interval = 120
@@ -156,7 +156,10 @@ def make_plot(channel, time, drawLabels=True):
     plt.xticks(np.arange(min(x), max(x)+1, interval), rotation=45)
     times = time.split('-') #2014-08-23-04AM
     months = ['','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    plt.title("%s - %s %d, %d\n" %(channel, months[int(times[1])], int(times[2]), int(times[0])))
+    try:
+        plt.title("%s - %s %d, %d\n" %(channel, months[int(times[1])], int(times[2]), int(times[0])))
+    except ValueError, IndexError:
+        plt.title(channel)
 
     plt.xlabel('\nTimes in EDT')
     plt.ylabel('\nMessages per minute\n', color='blue')
@@ -190,7 +193,7 @@ def make_plot(channel, time, drawLabels=True):
     ticklist = ax2.get_yticks()
     height_diff = ticklist[1] - ticklist[0]
     height_offset = 0
-    ha = 'left'
+    ha = 'center'
     for event in events:
         if drawLabels:
             plt.axvline(x=event[0]+padding_mins+carry*interval, color='red', linewidth=2, label=event[1])
@@ -219,10 +222,11 @@ def make_plot(channel, time, drawLabels=True):
 
 chan = None
 time = None
-try:
-    chan = sys.argv[1]
-    time = sys.argv[2]
-    make_plot(chan, time)
-except IndexError:
-    pass
+if sys.argv[0] == __file__:
+    try:
+        chan = sys.argv[1]
+        time = sys.argv[2]
+        make_plot(chan, time)
+    except IndexError:
+        pass
 

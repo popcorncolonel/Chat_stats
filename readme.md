@@ -21,7 +21,6 @@ To analyze data (optional - the images are still generated if you don't run this
     * [Cython](http://cython.org/#download) - Word cloud creation.  
 
 ###TODO###
-* examples folder. listed inline in this file.
 * Words per message?  
 * Create images (graphs) of the most used emotes
 
@@ -29,6 +28,8 @@ To analyze data (optional - the images are still generated if you don't run this
 [Email me](mailto:eric@ebcmsoftware.com) or [Tweet me](http://twitter.com/popcorncolonel)
 
 ###EXAMPLES###
+NOTE: These images my be shrunk down, so if they're hard to read, click on them to view the full version.
+
 **Stream activity over time**:
 
 ![Rate](examples/images/sing_sing/2014-08-06-04PM/rate.png)
