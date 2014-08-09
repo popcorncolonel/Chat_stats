@@ -26,5 +26,22 @@ To analyze data (optional - the images are still generated if you don't run this
 * Create images (graphs) of the most used emotes
 
 ###"I found a bug!"###
-[Email me](mailto:popcorncolonel@gmail.com) or [Tweet me](http://twitter.com/popcorncolonel)
+[Email me](mailto:eric@ebcmsoftware.com) or [Tweet me](http://twitter.com/popcorncolonel)
+
+###EXAMPLES###
+**Stream activity over time**:
+
+![Rate](examples/images/sing_sing/2014-08-06-04PM/rate.png)
+
+**Stream activity over time**, with optional event labels:
+
+![Rate2](examples/images/monotonetim/2014-08-05-10PM/rate.png)
+
+**Emote cloud**:
+
+![Emote cloud](examples/images/sing_sing/2014-08-06-04PM/emotecloud.png)
+
+**Word cloud** (by default, word clouds do not include emotes. To change this, just change "include_emotes" in global_consts.py):
+
+![Word cloud](examples/images/beatsplaypokemon/2014-08-08-08AM/wordcloud.png)
 
