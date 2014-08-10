@@ -108,28 +108,32 @@ num_messages = 0
 
 def log(author, message):
     global num_messages
+    global done
     num_messages += 1
     if debug:
         return
     message = formatMessage(message)
 
-    try:
-        #AUTHORS
-        authors.write(author + '\n')
-        #MESSAGES
-        messages.write(message + '\n')
-        #WORDS
-        for word in message.split(' '):
-            if word.isalnum() and (include_emotes or word not in emotelist):
-                words.write(word.upper())
-                words.write(' ')
-        #EMOTES
-        for word in message.split(' '):
-            if word in emotelist:
-                emotes.write(word.split('/')[0].split('7')[0] + '\n')
-    except ValueError: #happens if the program closes in the middle of writing to the files
-        print "Closing program..."
-        pass
+    if done:
+        print "trying to log message but not, because program is done!"
+    else:
+        try:
+            #AUTHORS
+            authors.write(author + '\n')
+            #MESSAGES
+            messages.write(message + '\n')
+            #WORDS
+            for word in message.split(' '):
+                if word.isalnum() and (include_emotes or word not in emotelist):
+                    words.write(word.upper())
+                    words.write(' ')
+            #EMOTES
+            for word in message.split(' '):
+                if word in emotelist:
+                    emotes.write(word.split('/')[0].split('7')[0] + '\n')
+        except ValueError: #happens if the program closes in the middle of writing to the files
+            print "Closing program..."
+            pass
 
 #http://stackoverflow.com/questions/5179467
 def setInterval(interval, times=-1):
@@ -200,11 +204,11 @@ def checkTime():
         cur_game = game
     try:
         rate.write(str(count)+','+str(num_messages)+','+str(viewers)+'\n')
+        count += 1
         for f in files:
             f.flush()
     except ValueError: #happens if the program closes in the middle of writing to the files
         pass
-        count += 1
     num_messages = 0
 
 done = False
