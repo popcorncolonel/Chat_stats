@@ -5,6 +5,7 @@ import sys
 import datetime
 import random
 import urllib2
+import string
 try:
     import matplotlib
     import matplotlib.pyplot as plt
@@ -36,7 +37,7 @@ def get_xinterval(dur):
         interval = 15
     if dur > 240:
         interval = 30
-    if dur > 780:
+    if dur > 700:
         interval = 60
     if dur > 1800:
         interval = 120
@@ -60,7 +61,7 @@ def get_yinterval(max_viewercount):
         interval = 15
     if max_viewercount > 140:
         interval = 20
-    if max_viewercount > 500:
+    if max_viewercount > 350:
         interval = 50
     if max_viewercount > 700:
         interval = 100
@@ -105,7 +106,13 @@ def make_plot(channel, time, drawLabels=True):
     rates = remove_trailing_zeroes(rates)
     num_removed = old_len - len(rates)
 
-    mins = map(lambda x:int(x.split(',')[0]), rates)
+    mins = map(lambda x:int(filter(lambda x:x in string.printable, x).split(',')[0]), rates)
+##### XXX
+    l = len(mins)
+    mins = []
+    for i in range(l):
+        mins.append(i)
+##### XXX
     y_data = map(lambda x:float(x.split(',')[1]), rates)
     show_viewers = False
     try:
@@ -134,12 +141,32 @@ def make_plot(channel, time, drawLabels=True):
     #print len(x)
     #print len(y)
     #print len(y2)
+    times = time.split('-') #2014-08-23-04AM
 
-    def t(x, pos):
-        return '%d:%02d %s' %((start_hour + x/60) % 12 or 12,
-                              x%60,
-                              'PM' if (start_hour + x/60)%24 >= 12 else 'AM')
+    short_months = ['','Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
 
+    year = int(times[0])
+    mo = int(times[1])
+    day = int(times[2])
+    hour = start_hour
+    minute = start_min
+    start_time = datetime.datetime(year, mo, day, hour, minute, 0)
+
+    #Removes leading zeroes from all the "words" in s.
+    #"00138 hello 01AM" -> "138 hello 1AM"
+    def removeLeadingZeroes(s):
+        return " ".join(map(lambda x: x.lstrip('0'), s.split(" ")))
+
+    def formatTime(x, pos):
+        #timestamp = (start_time - datetime.datetime(1970, 1, 1)).total_seconds() + x*60
+        #now_time = datetime.datetime.fromtimestamp(timestamp) #does not convert time zones. Need time zones.
+        now_time = datetime.timedelta(hours=x/60) + start_time
+        if dur > 1440: #Aug 5, 8AM 
+            return removeLeadingZeroes(now_time.strftime("%b %d, %I %p"))
+        elif interval >= 60: #8AM
+            return removeLeadingZeroes(now_time.strftime("%I %p"))
+        else: #7:45 AM
+            return removeLeadingZeroes(now_time.strftime("%I:%M %p"))
     print "Drawing rate over time graph..."
 
     #START GRAPHING
@@ -149,12 +176,11 @@ def make_plot(channel, time, drawLabels=True):
     #fig, ax = plt.subplots()
     ax = plt.axes()
     ax.xaxis.grid(True)
-    ax.xaxis.set_major_formatter(FuncFormatter(t))
+    ax.xaxis.set_major_formatter(FuncFormatter(formatTime))
     ax.yaxis.grid(True)
     ax.grid(True)
 
     plt.xticks(np.arange(min(x), max(x)+1, interval), rotation=45)
-    times = time.split('-') #2014-08-23-04AM
     months = ['','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     try:
         plt.title("%s - %s %d, %d\n" %(channel, months[int(times[1])], int(times[2]), int(times[0])))

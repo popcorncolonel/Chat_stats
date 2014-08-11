@@ -28,7 +28,7 @@ To analyze data (optional - the images are still generated if you don't run this
 [Email me](mailto:eric@ebcmsoftware.com) or [Tweet me](http://twitter.com/popcorncolonel)
 
 ###EXAMPLES###
-NOTE: These images my be shrunk down, so if they're hard to read, click on them to view the full version.
+NOTE: These images may be shrunken down, so if they're hard to read, click on them and view the full version.
 
 **Stream activity over time**:
 
