@@ -39,7 +39,7 @@ def get_xinterval(dur):
         interval = 30
     if dur > 700:
         interval = 60
-    if dur > 1800:
+    if dur > 1400:
         interval = 120
     if dur > 2700:
         interval = 180
@@ -127,6 +127,7 @@ def make_plot(channel, time, drawLabels=True):
     #interval = 15
     interval = get_xinterval(dur)
     padding_mins = start_min%interval
+    print padding_mins
     carry = start_min/interval
 
     x_data = range(carry*interval, start_min + dur + min(num_removed,padding_mins))
@@ -145,12 +146,16 @@ def make_plot(channel, time, drawLabels=True):
 
     short_months = ['','Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
 
-    year = int(times[0])
-    mo = int(times[1])
-    day = int(times[2])
-    hour = start_hour
-    minute = start_min
-    start_time = datetime.datetime(year, mo, day, hour, minute, 0)
+    try:
+        year = int(times[0])
+        mo = int(times[1])
+        day = int(times[2])
+        hour = start_hour
+        minute = start_min
+        start_time = datetime.datetime(year, mo, day, hour, minute, 0)
+    except ValueError: #debugging.
+        print "If this happens and you didn't modify any filenames of anything, this should NEVER HAPPEN! Email me popcorncolonel@gmail.com right away!"
+        start_time = datetime.datetime(2014, 8, 11, start_hour, start_min)
 
     #Removes leading zeroes from all the "words" in s.
     #"00138 hello 01AM" -> "138 hello 1AM"
@@ -160,8 +165,9 @@ def make_plot(channel, time, drawLabels=True):
     def formatTime(x, pos):
         #timestamp = (start_time - datetime.datetime(1970, 1, 1)).total_seconds() + x*60
         #now_time = datetime.datetime.fromtimestamp(timestamp) #does not convert time zones. Need time zones.
-        now_time = datetime.timedelta(hours=x/60) + start_time
-        if dur > 1440: #Aug 5, 8AM 
+        x -= padding_mins
+        now_time = datetime.timedelta(hours=float(x)/60) + start_time
+        if dur > 2160: #Aug 5, 8AM 
             return removeLeadingZeroes(now_time.strftime("%b %d, %I %p"))
         elif interval >= 60: #8AM
             return removeLeadingZeroes(now_time.strftime("%I %p"))
@@ -180,12 +186,19 @@ def make_plot(channel, time, drawLabels=True):
     ax.yaxis.grid(True)
     ax.grid(True)
 
-    plt.xticks(np.arange(min(x), max(x)+1, interval), rotation=45)
+    r = 45
+    if dur >= 2160:
+        r = 270
+    plt.xticks(np.arange(min(x), max(x)+1, interval), rotation=r)
     months = ['','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     try:
-        plt.title("%s - %s %d, %d\n" %(channel, months[int(times[1])], int(times[2]), int(times[0])))
-    except ValueError, IndexError:
-        plt.title(channel)
+        i = int(times[1])
+        mon = months[i] 
+        ye = int(times[2]) 
+        da = int(times[0]) 
+        plt.title("%s - %s %d, %d\n" %(channel, mon, ye, da))
+    except (ValueError, IndexError):
+        plt.title(channel+'\n')
 
     plt.xlabel('\nTimes in EDT')
     plt.ylabel('\nMessages per minute\n', color='blue')
@@ -218,7 +231,8 @@ def make_plot(channel, time, drawLabels=True):
 
     ticklist = ax2.get_yticks()
     height_diff = ticklist[1] - ticklist[0]
-    height_offset = 0
+    height_offset = ticklist[1]
+    init_offset = height_offset
     ha = 'center'
     for event in events:
         if drawLabels:
@@ -230,12 +244,17 @@ def make_plot(channel, time, drawLabels=True):
                     horizontalalignment=ha, fontsize=25, rotation=0, #rotation=270,
                     path_effects=[PathEffects.withSimplePatchShadow(linewidth=2)])
                     #path_effects=[PathEffects.withStroke(linewidth=1,foreground="black")])
-            height_offset = height_diff - height_offset
+            height_offset = (height_offset + height_diff) if height_offset == init_offset else init_offset
+            #height_offset = height_diff - height_offset
     #S E L L O U T
-    plt.text(-0.05, -0.170, 'http://github.com/popcorncolonel/chat_stats', color='grey', verticalalignment='top', 
+    plt.text(0.01,0.99, 'github.com/popcorncolonel/chat_stats', color='#666666', verticalalignment='top',
             horizontalalignment='left', fontsize=25, rotation=0, transform=ax.transAxes)
-    plt.text(1.05, -0.170, 'http://www.twitch.tv/'+channel, color='grey', verticalalignment='top', 
+    plt.text(0.99,0.99, 'http://twitch.tv/'+channel, color='#666666', verticalalignment='top', 
             horizontalalignment='right', fontsize=25, rotation=0, transform=ax.transAxes)
+    #plt.text(-0.05, -0.170, 'http://github.com/popcorncolonel/chat_stats', color='grey', verticalalignment='top',
+    #        horizontalalignment='left', fontsize=25, rotation=0, transform=ax.transAxes)
+    #plt.text(1.05, -0.170, 'http://www.twitch.tv/'+channel, color='grey', verticalalignment='top', 
+    #        horizontalalignment='right', fontsize=25, rotation=0, transform=ax.transAxes)
 
     #plt.show() #for running locally rather than saving the figure
 

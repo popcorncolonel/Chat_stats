@@ -7,13 +7,18 @@ import time
 
 def connect(channel, nick, PASS):
     join = "#" + channel
-    sock = socket.socket()
-    sock.connect(("irc.twitch.tv",80))
-    sock.send("USER " + nick + " 0 * :" + nick + "\r\n")
-    sock.send("PASS " + PASS + "\r\n")
-    sock.send("NICK " + nick + "\r\n")
-    sock.send("MODE " + nick + " +B\r\n")
-    sock.send("JOIN " + join + "\r\n")
+    while True:
+        sock = socket.socket()
+        sock.connect(("irc.twitch.tv",80))
+        sock.send("USER " + nick + " 0 * :" + nick + "\r\n")
+        sock.send("PASS " + PASS + "\r\n")
+        sock.send("NICK " + nick + "\r\n")
+        sock.send("MODE " + nick + " +B\r\n")
+        sock.send("JOIN " + join + "\r\n")
+        break
+    except socket.error:
+        print "Connection timeout D: retrying"
+        pass
     return sock
 
 #f is the function to be called on each line of data
@@ -27,12 +32,9 @@ def listen(channel, nick, PASS, interpret):
            #except ValueError:
            #    pass
            except socket.error: #if the user's connection blips
-               time.sleep(2)
-               sock = connect(channel, nick, PASS)
-#2 ideas here:
-#1) just re-call sock connect code
-#2) multiple socks, switch off each socket error
                print "connection error, attempting to listen"
+               time.sleep(5)
+               sock = connect(channel, nick, PASS)
                pass
            if data[0:4] == "PING":
               sock.send(data.replace("PING", "PONG"))

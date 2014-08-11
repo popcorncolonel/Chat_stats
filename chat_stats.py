@@ -125,8 +125,9 @@ def log(author, message):
             #WORDS
             for word in message.split(' '):
                 if word.isalnum() and (include_emotes or word not in emotelist):
-                    words.write(word)
-                    words.write(' ')
+                    if word != 'ACTION':
+                        words.write(word)
+                        words.write(' ')
             #EMOTES
             for word in message.split(' '):
                 if word in emotelist:
