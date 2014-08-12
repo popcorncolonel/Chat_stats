@@ -6,10 +6,10 @@ This is a visualizer for Twitch chat. First, you set it to record the stream. Wh
 * "**python chat_stats.py [channel]**"
 
 
-####To analyze data (optional - the images are still generated if you don't run this command):  #### 
+####To analyze data (optional - the images are still generated if you don't run this command):  
 * "**python log_reader.py [channel] [date] [type]**" <-- where [type] is an element of {'words', 'emotes', 'authors', 'messages'}
 
-####To manually create images (optional):####  
+####To manually create images (optional):
 * "**python make_plot.py [channel] [time]"** (ex. *python make_plot.py beatsplaypokemon 2014-08-09-11PM*)
 * "**python make_cloud.py [channel] [time]**" (ex. *python make_cloud.py beatsplaypokemon 2014-08-09-11PM*)
 

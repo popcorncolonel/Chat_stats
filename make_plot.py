@@ -127,7 +127,6 @@ def make_plot(channel, time, drawLabels=True):
     #interval = 15
     interval = get_xinterval(dur)
     padding_mins = start_min%interval
-    print padding_mins
     carry = start_min/interval
 
     x_data = range(carry*interval, start_min + dur + min(num_removed,padding_mins))
@@ -144,17 +143,16 @@ def make_plot(channel, time, drawLabels=True):
     #print len(y2)
     times = time.split('-') #2014-08-23-04AM
 
-    short_months = ['','Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
-
     try:
         year = int(times[0])
         mo = int(times[1])
         day = int(times[2])
         hour = start_hour
         minute = start_min
+        minute = 0 #?????????????????????????????????????????????????????????????
         start_time = datetime.datetime(year, mo, day, hour, minute, 0)
     except ValueError: #debugging.
-        print "If this happens and you didn't modify any filenames of anything, this should NEVER HAPPEN! Email me popcorncolonel@gmail.com right away!"
+        print "THIS SHOULD NEVER HAPPEN! Email me popcorncolonel@gmail.com right away!"
         start_time = datetime.datetime(2014, 8, 11, start_hour, start_min)
 
     #Removes leading zeroes from all the "words" in s.
@@ -165,7 +163,6 @@ def make_plot(channel, time, drawLabels=True):
     def formatTime(x, pos):
         #timestamp = (start_time - datetime.datetime(1970, 1, 1)).total_seconds() + x*60
         #now_time = datetime.datetime.fromtimestamp(timestamp) #does not convert time zones. Need time zones.
-        x -= padding_mins
         now_time = datetime.timedelta(hours=float(x)/60) + start_time
         if dur > 2160: #Aug 5, 8AM 
             return removeLeadingZeroes(now_time.strftime("%b %d, %I %p"))

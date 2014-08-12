@@ -8,17 +8,18 @@ import time
 def connect(channel, nick, PASS):
     join = "#" + channel
     while True:
-        sock = socket.socket()
-        sock.connect(("irc.twitch.tv",80))
-        sock.send("USER " + nick + " 0 * :" + nick + "\r\n")
-        sock.send("PASS " + PASS + "\r\n")
-        sock.send("NICK " + nick + "\r\n")
-        sock.send("MODE " + nick + " +B\r\n")
-        sock.send("JOIN " + join + "\r\n")
-        break
-    except socket.error:
-        print "Connection timeout D: retrying"
-        pass
+        try:
+            sock = socket.socket()
+            sock.connect(("irc.twitch.tv",80))
+            sock.send("USER " + nick + " 0 * :" + nick + "\r\n")
+            sock.send("PASS " + PASS + "\r\n")
+            sock.send("NICK " + nick + "\r\n")
+            sock.send("MODE " + nick + " +B\r\n")
+            sock.send("JOIN " + join + "\r\n")
+            break
+        except socket.error:
+            print "Connection timeout D: retrying"
+            pass
     return sock
 
 #f is the function to be called on each line of data
