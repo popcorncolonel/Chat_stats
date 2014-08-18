@@ -179,6 +179,7 @@ def get(URL):
             break
         except urllib2.URLError:
             print "Connection timed out. Retrying."
+            time.sleep(5)
             pass
     return val
             

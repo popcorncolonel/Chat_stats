@@ -31,9 +31,9 @@ def get_xinterval(dur):
         interval = 2
     if dur > 30:
         interval = 5
-    if dur > 100:
+    if dur > 90:
         interval = 10
-    if dur > 170:
+    if dur > 150:
         interval = 15
     if dur > 240:
         interval = 30
