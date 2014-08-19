@@ -69,7 +69,8 @@ def make_cloud(channel, time, myType=None, drawLabels=True, font_path=None):
 chan = None
 time = None
 argv = sys.argv
-if argv[0] == __file__:
+#if argv[0] == __file__:
+if __name__ == '__main__':
     try:
         chan = argv[1]
         time = argv[2]

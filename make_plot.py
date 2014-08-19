@@ -61,9 +61,9 @@ def get_yinterval(max_viewercount):
         interval = 15
     if max_viewercount > 140:
         interval = 20
-    if max_viewercount > 350:
+    if max_viewercount > 300:
         interval = 50
-    if max_viewercount > 700:
+    if max_viewercount > 600:
         interval = 100
     if max_viewercount > 1400:
         interval = 200
@@ -260,11 +260,14 @@ def make_plot(channel, time, drawLabels=True):
         os.makedirs(directory)
     plt.savefig(directory + '/rate.png', bbox_inches='tight')
     print "Rate graph completed!"
+    exit()
+    sys.exit()
     sys.exit()
 
 chan = None
 time = None
-if sys.argv[0] == __file__:
+#if sys.argv[0] == __file__:
+if __name__ == '__main__':
     try:
         chan = sys.argv[1]
         time = sys.argv[2]

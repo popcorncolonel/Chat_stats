@@ -193,6 +193,7 @@ def checkTime():
     global count
     global num_messages
     global cur_game
+    global done
     game = cur_game
     stream = json.load(get('https://api.twitch.tv/kraken/streams/'+channel))['stream']
     if stream == None:
@@ -205,7 +206,11 @@ def checkTime():
         #writeEvent(count, 'Now playing ' + game)
         cur_game = game
     try:
-        rate.write(str(count)+','+str(num_messages)+','+str(viewers)+'\n')
+        if not done:
+            rate.write(str(count)+','+str(num_messages)+','+str(viewers)+'\n')
+        else:
+            exit()
+            return
         count += 1
         for f in files:
             f.flush()
@@ -257,6 +262,8 @@ def logEvent(x):
         pass
     if not done:
         start_new_thread(logEvent, (x,))
+    else:
+        return
 
 def interpret(data):
     if isMessage(data):

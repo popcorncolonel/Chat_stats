@@ -39,7 +39,12 @@ if kind == 'words':
     lines = lines[0].split(' ')
 
 if filter_words != []:
-    lines = filter(lambda x:x.lower() in filter(lambda x:x.lower(), filter_words), lines)
+    if kind == 'words':
+        lines = filter(lambda x:x.lower() in filter(lambda x:x.lower(), filter_words), lines)
+    if kind != 'words':
+        normalized_filter_words = filter(lambda x:x.lower(), filter_words)
+        normalized_lines = filter(lambda x:x.lower().split("\n")[0] in normalized_filter_words, lines)
+        lines = map(lambda x:x.strip(), normalized_lines)
 
 for word in lines:
     word = word.strip()
