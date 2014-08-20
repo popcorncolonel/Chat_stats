@@ -31,14 +31,14 @@ def make_cloud(channel, time, myType=None, drawLabels=True, font_path=None):
 
         print "Generating word cloud... Hold on! (This takes a while if there are a lot of messages)"
         scale = 2
-        w = wordcloud.process_text(words, max_features=1000)
+        w = wordcloud.process_text(words, max_features=1500)
         elements = wordcloud.fit_words(w, width=w_words/scale, height=h_words/scale)
         wordcloud.draw(elements, os.path.relpath(directory + '/wordcloud.png'), 
                        width=w_words/scale, height=h_words/scale, scale=scale)
         print "Word cloud created!"
 
         print "Generating emote cloud..."
-        w = wordcloud.process_text(emotes, max_features=1000)
+        w = wordcloud.process_text(emotes, max_features=1500)
         elements = wordcloud.fit_words(w, width=w_emotes, height=h_emotes)
         wordcloud.draw(elements, os.path.relpath(directory + '/emotecloud.png'), 
                        width=w_emotes, height=h_emotes)

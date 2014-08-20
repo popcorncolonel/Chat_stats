@@ -3,6 +3,7 @@
 import os
 import sys
 import datetime
+from dateutil.tz import *
 import random
 import urllib2
 import string
@@ -197,7 +198,9 @@ def make_plot(channel, time, drawLabels=True):
     except (ValueError, IndexError):
         plt.title(channel+'\n')
 
-    plt.xlabel('\nTimes in EDT')
+    local_timezone = datetime.datetime.now(tzlocal()).tzname() #Eastern Daylight Time
+    local_timezone = "".join([word[0] for word in local_timezone.split(" ")])
+    plt.xlabel('\nTimes in ' + local_timezone)
     plt.ylabel('\nMessages per minute\n', color='blue')
     for tl in ax.get_yticklabels():
         tl.set_color('blue')
