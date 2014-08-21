@@ -3,6 +3,7 @@ create_graph = True #create graph of the chat+viewership over time? Need matplot
                     #Which you should have anyway because it's awesome.
 create_wordcloud = True #create wordclouds of the chat? Need word_cloud for this.
 
+#verbose = True #default=False
 verbose = False #default=False
 debug = False #It won't log any information.
 timezone = None #Change this if you want to manually input the timezone.
@@ -15,5 +16,6 @@ h_emotes = 900
 #dimensions of the word cloud
 w_words = 1600
 h_words = 900
-#w_words = 3000
-#h_words = 1800
+#w_words = 3200
+#h_words = 2000
+

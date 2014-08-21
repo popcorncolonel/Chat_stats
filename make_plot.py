@@ -199,7 +199,9 @@ def make_plot(channel, time, drawLabels=True):
         plt.title(channel+'\n')
 
     local_timezone = datetime.datetime.now(tzlocal()).tzname() #Eastern Daylight Time
-    local_timezone = "".join([word[0] for word in local_timezone.split(" ")])
+    split = local_timezone.split(" ")
+    if len(split) > 1:
+        local_timezone = "".join([word[0] for word in split])
     plt.xlabel('\nTimes in ' + local_timezone)
     plt.ylabel('\nMessages per minute\n', color='blue')
     for tl in ax.get_yticklabels():

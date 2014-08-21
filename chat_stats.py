@@ -63,9 +63,12 @@ def getEmotes():
 
 print
 
+#words in the twitchemotes API that should not actually be counted as emotes 
+    #AKA, not used as emotes >90% of the time
+not_emotes = ['GG', 'Gg', 'double', 'triple']
 emotelist = getEmotes()
-emotelist.remove('GG')
-emotelist.remove('Gg')
+for emote in not_emotes:
+    emotelist.remove(emote)
 
 dt = datetime.datetime.now()
 d = dt.strftime('%b-%d-%Y')

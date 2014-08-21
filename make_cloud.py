@@ -23,7 +23,7 @@ def make_cloud(channel, time, myType=None, drawLabels=True, font_path=None):
 
         file_path = os.path.relpath(directory + '/emotes.log')
         with open(file_path, 'r') as f:
-            emotes = " ".join(filter(lambda x:len(x)>3, f.read().split('\n')))
+            emotes = " ".join(filter(lambda x:len(x)>3 and x != 'double', f.read().split('\n')))
 
         directory = "images/" + channel + '/' + time
         if not os.path.exists(directory):
