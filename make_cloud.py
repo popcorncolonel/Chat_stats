@@ -10,7 +10,7 @@ try:
     import wordcloud
 except ImportError:
     print "Looks like you're missing one of the wordcloud dependencies - Check the Github page at https://github.com/popcorncolonel/chat_stats to see what you need to install."
-    sys.exit()
+    raise
 
 def make_cloud(channel, time, myType=None, drawLabels=True, font_path=None):
     #get the log file

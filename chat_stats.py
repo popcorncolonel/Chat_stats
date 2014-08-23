@@ -37,8 +37,9 @@ if create_wordcloud:
 try:
     from pass_info import get_password, get_username
 except ImportError:
-    print "Error loading Twitch password info"
-    print "You need to defined pass_info.py with your username and oauth password"
+    print "Error importing Twitch password info"
+    print "You need to define pass_info.py with your username and oauth password"
+    raise
 
 if len(sys.argv) == 1:
     channel = raw_input("Chat to join: ")

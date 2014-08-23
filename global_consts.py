@@ -14,8 +14,6 @@ w_emotes = 1600
 h_emotes = 900
 
 #dimensions of the word cloud
-w_words = 1600
-h_words = 900
-#w_words = 3200
-#h_words = 2000
+w_words = 3200
+h_words = 2000
 

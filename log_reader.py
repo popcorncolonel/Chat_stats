@@ -36,7 +36,7 @@ file_path = os.path.relpath(directory + '/' + kind + '.log')
 log = open(file_path, 'r')
 lines = list(log) #this works! wow! cool!
 if kind == 'words':
-    lines = lines[0].split(' ')
+    lines = map(lambda x:x.lower(), lines[0].split(' '))
 
 if filter_words != []:
     if kind == 'words':
