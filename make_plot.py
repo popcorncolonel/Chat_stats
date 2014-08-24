@@ -3,11 +3,11 @@
 import os
 import sys
 import datetime
-from dateutil.tz import *
 import random
 import urllib2
 import string
 try:
+    from dateutil.tz import *
     import matplotlib
     import matplotlib.pyplot as plt
     import numpy as np
@@ -15,7 +15,7 @@ try:
     from matplotlib.ticker import FuncFormatter
 except ImportError:
     print "Looks like you're missing some of the matplotlib dependencies - Check the Github page at https://github.com/popcorncolonel/chat_stats to see what you need to install."
-    sys.exit()
+    raise
 
 #leaves max(0, padding_mins) zeroes at the end to make it look more natural.
 def remove_trailing_zeroes(rates):

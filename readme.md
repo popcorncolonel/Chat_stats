@@ -21,9 +21,11 @@ This is a visualizer for Twitch chat. First, you set it to record the stream. Wh
 ###DEPENDENCIES###
 * Python 2.7.
 * [Matplotlib](http://matplotlib.org/downloads.html) - Graph creation (if you keep create_images as True).  
-* [word_cloud](https://github.com/amueller/word_cloud) - Word cloud creation. This can be a pain to install on Windows though. An alternative to this is just to copy+paste the contents of words.log to [http://www.wordle.net](http://www.wordle.net).  
+* [Word_cloud](https://github.com/amueller/word_cloud) - Word cloud creation. This can be a pain to install on Windows though. An alternative to this is just to copy+paste the contents of words.log to [http://www.wordle.net](http://www.wordle.net).  
     * [Python Imaging Library](http://www.pythonware.com/products/pil/) - Word cloud creation.  
     * [Cython](http://cython.org/#download) - Word cloud creation.  
+* [Python-Dateutil](https://pypi.python.org/pypi/python-dateutil) - Timezone analysis  
+
 
 ###TODO###
 * Words per message?  
