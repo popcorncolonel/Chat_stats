@@ -267,7 +267,6 @@ def make_plot(channel, time, drawLabels=True):
         os.makedirs(directory)
     plt.savefig(directory + '/rate.png', bbox_inches='tight')
     print "Rate graph completed!"
-    sys.exit()
 
 chan = None
 time = None

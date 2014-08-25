@@ -1,12 +1,10 @@
-#TODO: words per message?, --> AUTO WORD CLOUD <--, create images (graphs) of the most used emotes
+#TODO: .ini file for the exe in which people can set variables (aka those in global_consts)
 #TODO: Delete logs on SystemExit? maybe?
-#TODO: listen() might crash silently on internet interruption. need to do more testing.
 
 #USAGE: "python chat_stats.py" or "python chat_stats.py <channel>"
 
 #NOTE: Some special characters don't interact well with sockets and python, so those won't be logged (like some of them here: http://www.umingo.de/doku.php?id=misc:chat_smileys)
 #NOTE: This is meant to be done a few times per stream approximately (not like 100 times per stream). So if you start recording the chat, then restart 5 mins later, the old version will be overwritten, but if you start recording the chat then restart the program 2 hours later, it will start recording new logs. The filename represents when the chat recordings were started.
-#NOTE: 'rate' is in messages per minute
 
 
 from thread import start_new_thread, exit
@@ -271,13 +269,13 @@ def endProgram():
     global stopper
     for f in files:
         f.close()
-    img_directory = "images/" + channel + '/' + dt
+    img_directory = os.path.abspath("images/" + channel + '\\' + dt)
     if create_wordcloud:
         make_cloud(channel, dt)
-        print "Word clouds created under /" + img_directory + "!"
+        print "Word clouds created under " + img_directory + "!"
     if create_graph:
         make_plot(channel, dt)
-        print "Rate chart created under /" + img_directory + "!"
+        print "Rate chart created under " + img_directory + "!"
     else:
         print create_graph
     sys.exit()

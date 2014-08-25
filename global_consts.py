@@ -1,4 +1,4 @@
-include_emotes = False #include emotes in the words wordcloud?
+include_emotes = True #include emotes in the words wordcloud?
 create_graph = True #create graph of the chat+viewership over time? Need matplotlib for this. 
                     #Which you should have anyway because it's awesome.
 create_wordcloud = True #create wordclouds of the chat? Need word_cloud for this.
