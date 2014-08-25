@@ -303,7 +303,7 @@ def endFunc():
 print
 print "===============================STARTING CHAT INPUT=============================="
 print "Type '!exit', '!quit', or '!q' to stop recording."
-start_new_thread(logEvent, ('Log an event: ',))
+start_new_thread(logEvent, ('Log an event (optional): ',))
 try:
     stopper = checkTime()
     listen(channel, nick, PASS, interpret, endFunc)

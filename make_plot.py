@@ -8,7 +8,7 @@ import urllib2
 import string
 try:
     from dateutil.tz import *
-    import matplotlib
+    from matplotlib import rc
     import matplotlib.pyplot as plt
     import numpy as np
     import matplotlib.patheffects as PathEffects
@@ -231,7 +231,7 @@ def make_plot(channel, time, drawLabels=True):
 
     ax.fill_between(x,0,y,color='#5577DD')
     font = {'size' : 25}
-    matplotlib.rc('font', **font)
+    rc('font', **font)
 
     ticklist = ax2.get_yticks()
     height_diff = ticklist[1] - ticklist[0]
