@@ -119,7 +119,7 @@ def log(author, message):
     message = formatMessage(message)
 
     if done:
-        print "trying to log message but not, because program is done!"
+        return
     else:
         try:
             #AUTHORS
@@ -162,7 +162,6 @@ def setInterval(interval, times=-1):
             return stop
         return wrap
     return outer_wrap
-
 
 #init
 if not debug:
@@ -222,12 +221,13 @@ def checkTime():
         pass
     num_messages = 0
 
+
 done = False
 
 def endProgram():
     global done
     global dt
-    done = True
+    global stopper
     for f in files:
         f.close()
     img_directory = "images/" + channel + '/' + dt
@@ -239,18 +239,17 @@ def endProgram():
         print "Rate chart created under /" + img_directory + "!"
     else:
         print create_graph
-    exit()
-#TODO: output images and stuff. stats. (aka the main point of this program.)
-    #sys.exit()
+    sys.exit()
 
 def logEvent(x):
     global count
-    global done
     try:
         s = raw_input(x)
         if s == '!exit' or s == '!quit' or s == '!q':
-            print "==================================ENDING PROGRAM================================"
-            endProgram()
+            print "Starting program end cycle..."
+            done = True
+            stopper.set() #end the setInterval
+            return
         writeEvent(count, s)
         try:
             rate.flush()
@@ -264,13 +263,17 @@ def logEvent(x):
         print "==================================ENDING PROGRAM!+=============================="
         endProgram()
         pass
+    global done
     if not done:
         start_new_thread(logEvent, (x,))
     else:
         return
 
 def interpret(data):
+    global done
     if isMessage(data):
+        if done:
+            return
         try:
             try:
                 author = data.split('@')[1].split('.tmi.twitch.tv',1)[0]
@@ -293,12 +296,20 @@ def interpret(data):
 nick = get_username()
 PASS = get_password()
 
+def endFunc():
+    global done
+    return done
+
 print
 print "===============================STARTING CHAT INPUT=============================="
 print "Type '!exit', '!quit', or '!q' to stop recording."
 start_new_thread(logEvent, ('Log an event: ',))
-checkTime()
-listen(channel, nick, PASS, interpret)
+try:
+    stopper = checkTime()
+    listen(channel, nick, PASS, interpret, endFunc)
+except SystemExit:
+    print "o"
+    raise
 print "==================================ENDING_PROGRAM================================"
 endProgram()
 

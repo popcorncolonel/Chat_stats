@@ -202,8 +202,9 @@ def make_plot(channel, time, drawLabels=True):
     split = local_timezone.split(" ")
     if len(split) > 1:
         local_timezone = "".join([word[0] for word in split])
+    avg_mpm = np.mean(y)
     plt.xlabel('\nTimes in ' + local_timezone)
-    plt.ylabel('\nMessages per minute\n', color='blue')
+    plt.ylabel('\nMessages per minute (Avg=%0.2f)\n' %avg_mpm, color='blue')
     for tl in ax.get_yticklabels():
         tl.set_color('blue')
     plt.plot(x,y,linewidth=2,color='#4422AA')
@@ -217,7 +218,8 @@ def make_plot(channel, time, drawLabels=True):
         ax2.patch.set_visible(False)
         ax2.yaxis.set_ticks_position('right')
         ax2.yaxis.set_label_position('right')
-        ax2.set_ylabel('\nViewercount\n', color=ax2color, rotation=270)
+        avg_viewercount = np.mean(y2)
+        ax2.set_ylabel('\nViewercount (Avg=%0.1f)\n' %avg_viewercount, color=ax2color, rotation=270)
         m =  1.16*max(y)
         m2 = 1.16*max(y2)
         ax.set_yticks( np.arange(0, m,   get_yinterval(max(y))))
@@ -265,8 +267,6 @@ def make_plot(channel, time, drawLabels=True):
         os.makedirs(directory)
     plt.savefig(directory + '/rate.png', bbox_inches='tight')
     print "Rate graph completed!"
-    exit()
-    sys.exit()
     sys.exit()
 
 chan = None
