@@ -3,7 +3,8 @@ This is a visualizer for Twitch chat. First, you set it to record the stream. Wh
 
 Examples:  
 ![Rate thumb](examples/images/sing_sing/2014-08-06-04PM/rate_thumb.png)
-![Word cloud thumb](examples/images/beatsplaypokemon/2014-08-08-08AM/wordcloud_thumb.png)
+![Word cloud thumb](examples/images/beatsplaypokemon/2014-08-08-08AM/wordcloud_thumb.png)  
+(These are thumbnails. Scroll down to see full-sized images.)
 
 ###You can now download this program as a .exe!###
 [Download Link](http://www.mediafire.com/download/i6fv2d63a51ig1c/chat_stats.zip). Just unzip the files, double click on chat_stats.exe, and input the channel you want to record!  
