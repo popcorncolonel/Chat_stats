@@ -243,6 +243,7 @@ def endProgram():
 
 def logEvent(x):
     global count
+    global done
     try:
         s = raw_input(x)
         if s == '!exit' or s == '!quit' or s == '!q':
@@ -263,7 +264,6 @@ def logEvent(x):
         print "==================================ENDING PROGRAM!+=============================="
         endProgram()
         pass
-    global done
     if not done:
         start_new_thread(logEvent, (x,))
     else:

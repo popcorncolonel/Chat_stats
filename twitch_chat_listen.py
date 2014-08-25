@@ -27,9 +27,9 @@ def connect(channel, nick, PASS):
 #        will stop. By default (without this function being passed in), 
 #        this program will loop forever when called
 def listen(channel, nick, PASS, interpret, endFunc=None):
-    socket.settimeout(6) #so we can frequently check for endFunc
     try:
         sock = connect(channel, nick, PASS)
+        sock.settimeout(6) #so we can frequently check for endFunc
         while True:
            data = ''
            while True:
@@ -44,6 +44,7 @@ def listen(channel, nick, PASS, interpret, endFunc=None):
                    print "connection error, attempting to listen"
                    time.sleep(5)
                    sock = connect(channel, nick, PASS)
+                   sock.settimeout(6) #so we can frequently check for endFunc
                    break
            if data[0:4] == "PING":
               sock.send(data.replace("PING", "PONG"))
