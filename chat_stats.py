@@ -17,6 +17,7 @@ import string
 import datetime
 import threading
 import urllib2
+import urllib
 import json
 import re
 from twitch_chat_listen import listen
@@ -49,6 +50,20 @@ try:
     count = int(sys.argv[2])
 except IndexError, ValueError:
     count = 0
+
+def isTwitchChannel(channel):
+    response = json.load(urllib2.urlopen('https://api.twitch.tv/kraken/streams/'+channel))
+    return 'error' not in response.keys()
+
+while True:
+    try:
+        if not isTwitchChannel(channel):
+            print 'Error: "' + channel + '" does not appear to be a valid Twitch channel.'
+            channel = raw_input("Chat to join: ")
+        break
+    except urllib2.HTTPError:
+        print 'Error: "' + channel + '" does not appear to be a valid Twitch channel.'
+        channel = raw_input("Chat to join: ")
 
 #thanks to http://twitchemotes.com/ :-)
 def getEmotes():
