@@ -17,7 +17,6 @@ import string
 import datetime
 import threading
 import urllib2
-import urllib
 import json
 import re
 from twitch_chat_listen import listen
@@ -41,6 +40,33 @@ except ImportError:
     print "Error importing Twitch password info"
     print "You need to define pass_info.py with your username and oauth password"
     raise
+
+VERSION = "1.0"
+def checkVersion():
+    try:
+        s = urllib2.urlopen('http://chat-stats.appspot.com/versions').read()
+    except urllib2.URLError:
+        return #silently exit if server is down
+    json_acceptable_string = s.replace("'", "\"")
+    flag = False
+    d = json.loads(json_acceptable_string)
+    float_keys = map(float, d.keys())
+    for key in list(reversed(sorted(float_keys))):
+        key = str(key)
+        if float(key) > float(VERSION):
+            if not flag:
+                print 'Program out of date!'
+                flag = True
+            else:
+                print
+            print 'New in version ' + key + ':'
+            for s in d[key].split('*'):
+                if s != '':
+                    print '-'+s
+        else:
+            return
+
+checkVersion()
 
 if len(sys.argv) == 1:
     channel = raw_input("Chat to join: ")

@@ -1,6 +1,7 @@
 ###What is this?###
 This is a visualizer for Twitch chat. First, you set it to record the stream. When you're done recording, the program automatically generates a graph of stream activity (chat rate and viewership) over time, then generates a few word clouds that help to visualize the chat experience. Examples of both can be found in the "examples" directory of this repository.
 
+Examples:
 ![Rate thumb](examples/images/sing_sing/2014-08-06-04PM/rate_thumb.png)
 ![Word cloud thumb](examples/images/beatsplaypokemon/2014-08-08-08AM/wordcloud_thumb.png)
 
