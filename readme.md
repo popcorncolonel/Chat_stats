@@ -71,7 +71,7 @@ NOTE: These images may be shrunken down, so if they're hard to read, click on th
 
 ![Emote cloud](examples/images/sing_sing/2014-08-06-04PM/emotecloud.png)
 
-**Word cloud** (by default, word clouds do not include emotes. To change this, just change "include_emotes" in global_consts.py):
+**Word cloud** (by default, word clouds do not include emotes. To change this, just change "include_emotes" in chat_stats.ini):
 
 ![Word cloud](examples/images/beatsplaypokemon/2014-08-08-08AM/wordcloud.png)
 

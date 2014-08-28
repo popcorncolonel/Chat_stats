@@ -5,11 +5,25 @@ import sys
 import datetime
 import random
 import urllib2
-from global_consts import w_emotes, h_emotes, w_words, h_words
 try:
     import wordcloud
 except ImportError:
     print "Looks like you're missing one of the wordcloud dependencies - Check the Github page at https://github.com/popcorncolonel/chat_stats to see what you need to install."
+    raise
+
+from get_settings import getSettings
+
+settingsDict = getSettings()
+try:
+    w_words = int(settingsDict['w_words'])
+    h_words = int(settingsDict['h_words'])
+    w_emotes = int(settingsDict['w_emotes'])
+    h_emotes = int(settingsDict['h_emotes'])
+except KeyError as e:
+    print "Setting missing:", e
+    raise
+except ValueError as e:
+    print "Malformed setting:", e
     raise
 
 def make_cloud(channel, time, myType=None, drawLabels=True, font_path=None):
@@ -23,7 +37,7 @@ def make_cloud(channel, time, myType=None, drawLabels=True, font_path=None):
 
         file_path = os.path.relpath(directory + '/emotes.log')
         with open(file_path, 'r') as f:
-            emotes = " ".join(filter(lambda x:len(x)>3 and x != 'double', f.read().split('\n')))
+            emotes = " ".join(filter(lambda x:len(x)>3 and x != 'double' and x != 'triple', f.read().split('\n')))
 
         directory = "images/" + channel + '/' + time
         if not os.path.exists(directory):

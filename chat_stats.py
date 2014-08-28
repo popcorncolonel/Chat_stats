@@ -1,5 +1,4 @@
-#TODO: .ini file for the exe in which people can set variables (aka those in global_consts)
-#TODO: Delete logs on SystemExit? maybe?
+#TODO: Delete logs on SystemExit? maybe? maybe after 24 hrs or a set period of time?
 
 #USAGE: "python chat_stats.py" or "python chat_stats.py <channel>"
 
@@ -18,8 +17,26 @@ import urllib2
 import json
 import re
 from twitch_chat_listen import listen
+from get_settings import getSettings
 
-from global_consts import include_emotes, create_graph, create_wordcloud, verbose, debug
+settingsDict = getSettings()
+
+#converts string to boolean
+def toBool(s):
+    try:
+        return s.lower().strip() in ['true', 'yes', 'y', '1', 't', 'yeah']
+    except AttributeError, ValueError:
+        return False
+
+try:
+    include_emotes = toBool(settingsDict['include_emotes'])
+    create_graph = toBool(settingsDict['create_graph']) 
+    create_wordcloud = toBool(settingsDict['create_wordcloud']) 
+    verbose = toBool(settingsDict['verbose']) 
+    debug = toBool(settingsDict['debug']) 
+except KeyError as e:
+    print "Setting missing:", e
+    raise
 
 if '--nocloud' in sys.argv[2:]:
     create_wordcloud = False
@@ -39,7 +56,7 @@ except ImportError:
     print "You need to define pass_info.py with your username and oauth password"
     raise
 
-VERSION = "1.0"
+VERSION = "1.01"
 def checkVersion():
     try:
         s = urllib2.urlopen('http://chat-stats.appspot.com/versions').read()
@@ -53,14 +70,14 @@ def checkVersion():
         key = str(key)
         if float(key) > float(VERSION):
             if not flag:
-                print 'Program out of date!'
+                print 'Program out of date! Download the newest version at https://github.com/popcorncolonel/chat_stats'
                 flag = True
             else:
                 print
             print 'New in version ' + key + ':'
             for s in d[key].split('*'):
                 if s != '':
-                    print '-'+s
+                    print '  -'+s
         else:
             return
 
@@ -278,6 +295,7 @@ def endProgram():
         print "Rate chart created under " + img_directory + "!"
     else:
         print create_graph
+    raw_input('All images created! Press enter to close the program.')
     sys.exit()
 
 def logEvent(x):

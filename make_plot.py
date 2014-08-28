@@ -6,6 +6,7 @@ import datetime
 import random
 import urllib2
 import string
+from get_settings import getSettings
 try:
     from dateutil.tz import *
     from matplotlib import rc
@@ -198,7 +199,22 @@ def make_plot(channel, time, drawLabels=True):
     except (ValueError, IndexError):
         plt.title(channel+'\n')
 
-    local_timezone = datetime.datetime.now(tzlocal()).tzname() #Eastern Daylight Time
+    settingsDict = getSettings()
+    local_timezone = None
+    try:
+        local_timezone = settingsDict['timezone']
+    except KeyError as e:
+        print "Setting missing:", e
+        raise
+    except ValueError as e:
+        print "Malformed setting:", e
+        raise
+
+    if local_timezone.lower().strip() == 'none' or local_timezone.lower().strip() == 'auto':
+        local_timezone = datetime.datetime.now(tzlocal()).tzname() #Eastern Daylight Time
+    else:
+        local_timezone = local_timezone.strip()
+
     split = local_timezone.split(" ")
     if len(split) > 1:
         local_timezone = "".join([word[0] for word in split])
