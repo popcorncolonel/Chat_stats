@@ -51,10 +51,15 @@ Can't manually call make_plot.py or make_cloud.py to re-make the images
 
 ###TODO###
 * Words per message?  
-* Create images (graphs) of the most used emotes
+* Create images (graphs) of the most used emotes in image form.
+* Make make_plot.exe and make_cloud.exe available to those who download the distribution, so they can make visualizations during a stream and after a stream is done. And so they can just re-try their word-cloud if they didn't like the font/layout/colors/etc.
+* (Potential) Web-based version was requested by a few people. Real-time wordcloud (apparently like what someone was doing at AGDQ. Can make one for recent messages (past few hours) or entire-stream wordcloud
+* Maybe larger scale data like overall wordcloud (for each log in the directory, look at messages.csv), and average viewercount or chat participation rate over time
+* More data in the graph? Such as total number of people who typed chat messages as a ratio of people who just joined the chat (but might not have said anything)
+* Find time during the school year to do all this.
 
 ###"I found a bug!"###
-[Email me](mailto:eric@ebcmsoftware.com) or [Tweet me](http://twitter.com/popcorncolonel)
+[Email me](mailto:eric@ebcmsoftware.com) or [Tweet me](http://twitter.com/popcorncolonel) or open an [issue on GitHub](https://github.com/popcorncolonel/Chat_stats/issues)
 
 ###EXAMPLES###
 NOTE: These images may be shrunken down, so if they're hard to read, click on them and view the full version.
