@@ -87,7 +87,19 @@ argv = sys.argv
 if __name__ == '__main__':
     try:
         chan = argv[1]
+    except IndexError:
+        chan = raw_input("Channel name to visualize: ")
+        pass
+    try:
         time = argv[2]
+    except IndexError:
+        time = raw_input("Specific stream directory (or 'recent' for most recent recorded): ")
+        pass
+    try:
+        if 'recent' in time:
+            directory = "logs/" + chan + '/'
+            file_path = os.path.relpath(directory)
+            time = list(reversed(sorted(os.listdir(file_path))))[0] 
         myType = None
         font_path = None
         if len(argv) >= 4:

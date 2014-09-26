@@ -11,6 +11,7 @@ try:
     from dateutil.tz import *
     from matplotlib import rc
     import matplotlib.pyplot as plt
+    import FileDialog #matplotlib apparently needs this to run in py2exe.
     import numpy as np
     import matplotlib.patheffects as PathEffects
     from matplotlib.ticker import FuncFormatter
@@ -235,7 +236,7 @@ def make_plot(channel, time, drawLabels=True):
         ax2.yaxis.set_ticks_position('right')
         ax2.yaxis.set_label_position('right')
         avg_viewercount = np.mean(y2)
-        ax2.set_ylabel('\nViewercount (Avg=%0.1f)\n' %avg_viewercount, color=ax2color, rotation=270)
+        ax2.set_ylabel('Viewercount (Avg=%0.1f)\n\n' %avg_viewercount, color=ax2color, labelpad=50, rotation=270)
         m =  1.16*max(y)
         m2 = 1.16*max(y2)
         ax.set_yticks( np.arange(0, m,   get_yinterval(max(y))))
@@ -291,7 +292,12 @@ if __name__ == '__main__':
     try:
         chan = sys.argv[1]
         time = sys.argv[2]
+        if 'recent' in time:
+            directory = "logs/" + chan + '/'
+            file_path = os.path.relpath(directory)
+            time = list(reversed(sorted(os.listdir(file_path))))[0] 
         make_plot(chan, time)
     except IndexError:
+        print "Usage: python chat_stats.py [name] [date | 'recent']"
         pass
 

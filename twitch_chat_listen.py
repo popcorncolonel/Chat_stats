@@ -35,10 +35,10 @@ def listen(channel, nick, PASS, interpret, endFunc=None):
            while True:
                try:
                    data = sock.recv(512)
-                   if endFunc and endFunc():
-                       return
                    break
                except socket.timeout:
+                   if endFunc and endFunc():
+                       return
                    continue
                except socket.error: #if the user's connection blips
                    print "connection error, attempting to listen"

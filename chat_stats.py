@@ -16,7 +16,7 @@ import threading
 import urllib2
 import json
 import re
-from twitch_chat_listen import listen
+from twitch_chat_listen import listen #py2exe is weird.
 from get_settings import getSettings
 
 settingsDict = getSettings()
@@ -287,12 +287,12 @@ def endProgram():
     for f in files:
         f.close()
     img_directory = os.path.abspath("images/" + channel + '\\' + dt)
-    if create_wordcloud:
-        make_cloud(channel, dt)
-        print "Word clouds created under " + img_directory + "!"
     if create_graph:
         make_plot(channel, dt)
         print "Rate chart created under " + img_directory + "!"
+    if create_wordcloud:
+        make_cloud(channel, dt)
+        print "Word clouds created under " + img_directory + "!"
     else:
         print create_graph
     raw_input('All images created! Press enter to close the program.')
