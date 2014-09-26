@@ -57,6 +57,9 @@ Can't manually call make_plot.py or make_cloud.py to re-make the images
 * (Potential) Web-based version was [requested by a few people](http://www.reddit.com/r/Twitch/comments/2ekdjf/twitch_chat_stats_gather_and_visualize_statistics/ck0boi2). Real-time wordcloud (apparently like what someone was doing at AGDQ. Can make one for recent messages (past few hours) or entire-stream wordcloud
 * Maybe larger scale data like overall wordcloud (for each log in the directory, look at messages.csv), and average viewercount or chat participation rate over time
 * More data in the graph? Such as total number of people who typed chat messages as a ratio of people who just joined the chat (but might not have said anything)
+* Fix py2exe
+* More windows compatability (DLL stuff)
+* Online changelog at [http://chat-stats.appspot.com/changelog](http://chat-stats.appspot.com/changelog) (that's already created, just need to make it visual)
 * Find time during the school year to do all this.
 
 ###"I found a bug!"###
