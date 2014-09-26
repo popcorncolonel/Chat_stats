@@ -56,7 +56,7 @@ except ImportError:
     print "You need to define pass_info.py with your username and oauth password"
     raise
 
-VERSION = "1.01"
+VERSION = "1.02"
 def checkVersion():
     try:
         s = urllib2.urlopen('http://chat-stats.appspot.com/versions').read()
