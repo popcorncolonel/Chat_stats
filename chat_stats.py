@@ -87,8 +87,10 @@ if len(sys.argv) == 1:
     channel = raw_input("Chat to join: ")
 else:
     channel = sys.argv[1]
+#where they want to start the minutes at. 
+#only useful if the program broke mid-recording, and you want to continue.
 try:
-    count = int(sys.argv[2])
+    count = int(sys.argv[2]) 
 except IndexError, ValueError:
     count = 0
 
